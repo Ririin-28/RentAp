@@ -20,7 +20,8 @@
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
             <div class="title-container">
-                <h1>RentAp: Rentor Dashboard</h1>
+                <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
+                <h1>Rentor Dashboard</h1>
             </div>
 
             <!-- Card Containers -->

@@ -59,25 +59,22 @@ body {
 
 
 .toggle-btn i {
-    font-size: 1.7rem; /* Adjust this to match the other icons */
+    font-size: 1.7rem; 
     color: #FFF;
-    width: 24px; /* Ensure consistent width */
-    height: 24px; /* Ensure consistent height */
+    width: 24px; 
+    height: 24px; 
     max-width: 100%;
 }
 
 
 .sidebar-logo {
-    display: flex;
-    align-items: center; /* Align text and icon */
-    padding: 10px 15px; /* Adjust spacing */
+    margin: auto 0;
 }
 
 .sidebar-logo a {
     color: #FFF;
     font-size: 1.15rem;
     font-weight: 600;
-    margin-left: 10px; /* Add space between icon and text */
 }
 
 .toggle-btn {
@@ -107,6 +104,7 @@ a.sidebar-link {
     font-size: 0.9rem;
     white-space: nowrap;
     border-left: 3px solid transparent;
+    border-top: -3px;
 }
 
 .sidebar-link i {
@@ -123,6 +121,7 @@ a.sidebar-link:hover {
     position: relative;
     left: -5px;
 }
+
 
 #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
     position: absolute;
@@ -177,6 +176,14 @@ a.sidebar-link:hover {
     margin-left: 260px;
 }
 
+
+/* ---------------------- Title ---------------------- */
+.title_icon {
+    width: 70px;
+    height: 45px;
+    margin-right: 10px;
+}
+
 .title-container {
     color: black;
     padding: 20px;
@@ -185,7 +192,7 @@ a.sidebar-link:hover {
     margin-bottom: 20px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+
 }
 
 .title-container h1 {
@@ -215,7 +222,7 @@ button.toggle-btn img.custom-logo {
 .cardBox {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly; /* Ensures cards fit within the screen */
+    justify-content: space-evenly; 
     width: 100%;
 }
 
@@ -265,3 +272,4 @@ button.toggle-btn img.custom-logo {
     flex-wrap: wrap;      
     gap: 20px;          
 }
+
