@@ -21,11 +21,11 @@
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
-                <h1>Rentor Dashboard</h1>
+                <h1>Rental Analytics</h1>
             </div>
 
             
-            
+
         </div>
     </div>
 
