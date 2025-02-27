@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+html, body {
+    overflow: hidden;
+    height: 100%;
+}
+
 ::after,
 ::before {
     box-sizing: border-box;
@@ -39,7 +44,7 @@ body {
     min-width: 70px;
     z-index: 1000;
     transition: width 0.25s ease-in-out;
-    background-color: #ffa41c;
+    background-color: #333333;
     display: flex;
     flex-direction: column;
     top: 0;
@@ -52,6 +57,29 @@ body {
     transition: width 0.25s ease-in-out;
 }
 
+
+.toggle-btn i {
+    font-size: 1.7rem; /* Adjust this to match the other icons */
+    color: #FFF;
+    width: 24px; /* Ensure consistent width */
+    height: 24px; /* Ensure consistent height */
+    max-width: 100%;
+}
+
+
+.sidebar-logo {
+    display: flex;
+    align-items: center; /* Align text and icon */
+    padding: 10px 15px; /* Adjust spacing */
+}
+
+.sidebar-logo a {
+    color: #FFF;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-left: 10px; /* Add space between icon and text */
+}
+
 .toggle-btn {
     background-color: transparent;
     cursor: pointer;
@@ -60,20 +88,6 @@ body {
     margin-left: 5px;
 }
 
-.toggle-btn i {
-    font-size: 1.5rem;
-    color: #FFF;
-}
-
-.sidebar-logo {
-    margin: auto 0;
-}
-
-.sidebar-logo a {
-    color: #FFF;
-    font-size: 1.15rem;
-    font-weight: 600;
-}
 
 #sidebar:not(.expand) .sidebar-logo,
 #sidebar:not(.expand) a.sidebar-link span {
@@ -107,12 +121,13 @@ a.sidebar-link:hover {
 
 .sidebar-item {
     position: relative;
+    left: -5px;
 }
 
 #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
     position: absolute;
     top: 0;
-    left: 70px;
+    left: 50px;
     background-color: #16be46;
     padding: 0;
     min-width: 15rem;
@@ -163,8 +178,7 @@ a.sidebar-link:hover {
 }
 
 .title-container {
-    background-color: #ffa41c;
-    color: #fff;
+    color: black;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -186,7 +200,7 @@ a.sidebar-link:hover {
 
 button.toggle-btn {
     padding: 10px;
-    padding-top: 17px;
+    padding-left: 15px;
 }
 
 button.toggle-btn img.custom-logo {
@@ -200,9 +214,9 @@ button.toggle-btn img.custom-logo {
 /* ---------------------- Cards ---------------------- */
 .cardBox {
     display: flex;
-    flex-wrap: wrap;              
-    gap: 20px;                 
-    justify-content: center;      
+    flex-wrap: wrap;
+    justify-content: space-evenly; /* Ensures cards fit within the screen */
+    width: 100%;
 }
 
 .card {
