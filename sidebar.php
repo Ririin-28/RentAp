@@ -31,7 +31,7 @@
 
         <li class="sidebar-item">
             <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#accounts" aria-expanded="false" aria-controls="accounts">
-                <i class="lni lni-users"></i>
+                <i class="bi bi-gear"></i>
                 <span>Maintenance</span>
             </a>
             <ul id="accounts" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
@@ -59,7 +59,7 @@
 
         <li class="sidebar-item">
             <a href="rentor_edit_payment.php" class="sidebar-link">
-                <i class="bi bi-gear"></i>
+                <i class="bi bi-bank"></i>
                 <span>Edit Payment</span>
             </a>
         </li>
