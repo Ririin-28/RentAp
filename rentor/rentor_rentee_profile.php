@@ -15,17 +15,17 @@
 
 <body>
     <div class="wrapper">
-        <?php include '../sidebar.php'; ?>
+        <?php include '../rentor_sidebar.php'; ?>
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
-                <h1>Rentee Management</h1>
+                <h1>Rentee Profile</h1>
             </div>
 
             
-            
+
         </div>
     </div>
 

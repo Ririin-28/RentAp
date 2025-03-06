@@ -15,17 +15,11 @@
             </a>
         </li>
 
-        <li class="sidebar-item">
-            <a href="rentor_payment_history.php" class="sidebar-link">
-                <i class="bi bi-cash-coin"></i>
-                <span>Payment History</span>
-            </a>
-        </li>
 
         <li class="sidebar-item">
-            <a href="rentor_rentee_list.php" class="sidebar-link">
+            <a href="rentor_apartment_management.php" class="sidebar-link">
                 <i class="bi bi-building-gear"></i>
-                <span>Rentee Management</span>
+                <span>Apartment Management</span>
             </a>
         </li>
 
@@ -51,16 +45,16 @@
         </li>
 
         <li class="sidebar-item">
-            <a href="rentor_analytics.php" class="sidebar-link">
-                <i class="bi bi-clipboard-data"></i>
-                <span>Rental Analytics</span>
+            <a href="rentor_rentee_profile.php" class="sidebar-link">
+                <i class="bi bi-person"></i>
+                <span>Rentee Profile</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="rentor_edit_payment.php" class="sidebar-link">
-                <i class="bi bi-bank"></i>
-                <span>Edit Payment</span>
+            <a href="rentor_archive.php" class="sidebar-link">
+                <i class="bi bi-archive"></i>
+                <span>Archive</span>
             </a>
         </li>
 

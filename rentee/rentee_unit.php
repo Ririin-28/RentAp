@@ -15,13 +15,13 @@
 
 <body>
     <div class="wrapper">
-        <?php include '../sidebar.php'; ?>
+        <?php include '../rentee_sidebar.php'; ?>
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
-                <h1>Payment History</h1>
+                <h1>Unit</h1>
             </div>
 
             
