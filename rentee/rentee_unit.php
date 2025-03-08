@@ -28,7 +28,7 @@
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
             <div class="title-container">
-                <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
+                <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
                 <h1>Unit</h1>
             </div>
 
@@ -40,12 +40,13 @@
                                 <div class="row">
                                     <div class="col-12 mb-5">
                                         <h4 class="card-title"><strong>Unit Number</strong></h4>
-                                        <p class="card-text">Unit 101</p>
+                                        <p class="card-text">You Unit Number: <strong>Unit 101</strong></p>
                                     </div>
                                     <!-- Due Date Section -->
                                     <div class="col-12 col-md-4">
                                         <h4><strong>Due Date</strong></h4>
-                                        <p>Your next payment is due on: <strong>March 15, 2025</strong></p>
+                                        <p class="mb-0">Your next payment is due on: <strong>March 15, 2025</strong></p>
+                                        <p>Payment Status: <strong style="color: red;">Pending</strong></p>
                                     </div>
 
                                     <!-- Maintenance Request Section -->

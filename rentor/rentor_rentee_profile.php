@@ -20,7 +20,7 @@
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
             <div class="title-container">
-                <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
+                <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
                 <h1>Rentee Profile</h1>
             </div>
 
