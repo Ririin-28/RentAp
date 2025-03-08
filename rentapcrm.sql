@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2025 at 01:48 PM
+-- Generation Time: Mar 06, 2025 at 03:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `archivedrentees`
+-- (See below for the actual view)
+--
+CREATE TABLE `archivedrentees` (
+`rentee_id` int(11)
+,`full_name` varchar(100)
+,`contact_number` varchar(15)
+,`email` varchar(100)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `maintenancerequests`
 --
 
@@ -39,19 +52,6 @@ CREATE TABLE `maintenancerequests` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
---
-
-CREATE TABLE `notifications` (
-  `notification_id` int(11) NOT NULL,
-  `rentee_id` int(11) DEFAULT NULL,
-  `message` text DEFAULT NULL,
-  `notification_date` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `payments`
 --
 
@@ -61,6 +61,7 @@ CREATE TABLE `payments` (
   `amount_paid` decimal(10,2) NOT NULL,
   `payment_date` date NOT NULL,
   `due_date` date NOT NULL,
+  `payment_status` enum('Paid on Time','Late Payment','Unpaid','') NOT NULL,
   `e_receipt` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -100,6 +101,7 @@ CREATE TABLE `rentees` (
   `full_name` varchar(100) NOT NULL,
   `contact_number` varchar(15) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
   `unit_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -115,6 +117,15 @@ CREATE TABLE `units` (
   `status` enum('Available','Occupied','Under Maintenance') NOT NULL,
   `monthly_rent` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `archivedrentees`
+--
+DROP TABLE IF EXISTS `archivedrentees`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `archivedrentees`  AS SELECT `rentees`.`rentee_id` AS `rentee_id`, `rentees`.`full_name` AS `full_name`, `rentees`.`contact_number` AS `contact_number`, `rentees`.`email` AS `email` FROM `rentees` WHERE `rentees`.`unit_id` is null ;
 
 -- --------------------------------------------------------
 
@@ -144,13 +155,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 ALTER TABLE `maintenancerequests`
   ADD PRIMARY KEY (`request_id`),
   ADD KEY `unit_id` (`unit_id`),
-  ADD KEY `rentee_id` (`rentee_id`);
-
---
--- Indexes for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`notification_id`),
   ADD KEY `rentee_id` (`rentee_id`);
 
 --
@@ -184,12 +188,6 @@ ALTER TABLE `maintenancerequests`
   MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
@@ -215,26 +213,20 @@ ALTER TABLE `units`
 -- Constraints for table `maintenancerequests`
 --
 ALTER TABLE `maintenancerequests`
-  ADD CONSTRAINT `maintenancerequests_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `units` (`unit_id`),
-  ADD CONSTRAINT `maintenancerequests_ibfk_2` FOREIGN KEY (`rentee_id`) REFERENCES `rentees` (`rentee_id`);
-
---
--- Constraints for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`rentee_id`) REFERENCES `rentees` (`rentee_id`);
+  ADD CONSTRAINT `maintenancerequests_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `units` (`unit_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `maintenancerequests_ibfk_2` FOREIGN KEY (`rentee_id`) REFERENCES `rentees` (`rentee_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`rentee_id`) REFERENCES `rentees` (`rentee_id`);
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`rentee_id`) REFERENCES `rentees` (`rentee_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `rentees`
 --
 ALTER TABLE `rentees`
-  ADD CONSTRAINT `rentees_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `units` (`unit_id`);
+  ADD CONSTRAINT `rentees_ibfk_1` FOREIGN KEY (`unit_id`) REFERENCES `units` (`unit_id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
