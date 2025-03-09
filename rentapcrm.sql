@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2025 at 03:34 PM
+-- Generation Time: Mar 09, 2025 at 12:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,7 @@ CREATE TABLE `maintenancerequests` (
   `rentee_id` int(11) DEFAULT NULL,
   `request_date` date NOT NULL,
   `description` text DEFAULT NULL,
-  `status` enum('Pending','In Progress','Completed') DEFAULT 'Pending'
+  `status` enum('Pending','In Progress') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -58,9 +58,9 @@ CREATE TABLE `maintenancerequests` (
 CREATE TABLE `payments` (
   `payment_id` int(11) NOT NULL,
   `rentee_id` int(11) DEFAULT NULL,
-  `amount_paid` decimal(10,2) NOT NULL,
-  `payment_date` date NOT NULL,
   `due_date` date NOT NULL,
+  `payment_amount` decimal(10,2) NOT NULL,
+  `payment_date` date DEFAULT NULL,
   `payment_status` enum('Paid on Time','Late Payment','Unpaid','') NOT NULL,
   `e_receipt` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -79,20 +79,6 @@ CREATE TABLE `peakrentalperiods` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `rentalreport`
--- (See below for the actual view)
---
-CREATE TABLE `rentalreport` (
-`unit_number` varchar(10)
-,`full_name` varchar(100)
-,`amount_paid` decimal(10,2)
-,`payment_date` date
-,`due_date` date
-);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `rentees`
 --
 
@@ -102,6 +88,9 @@ CREATE TABLE `rentees` (
   `contact_number` varchar(15) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
+  `6_digit_pin` int(11) NOT NULL,
+  `move_in_date` date NOT NULL,
+  `move_out_date` date NOT NULL,
   `unit_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -135,15 +124,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `peakrentalperiods`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `peakrentalperiods`  AS SELECT month(`payments`.`payment_date`) AS `month`, count(`payments`.`payment_id`) AS `total_payments` FROM `payments` GROUP BY month(`payments`.`payment_date`) ORDER BY count(`payments`.`payment_id`) DESC ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `rentalreport`
---
-DROP TABLE IF EXISTS `rentalreport`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rentalreport`  AS SELECT `u`.`unit_number` AS `unit_number`, `r`.`full_name` AS `full_name`, `p`.`amount_paid` AS `amount_paid`, `p`.`payment_date` AS `payment_date`, `p`.`due_date` AS `due_date` FROM ((`payments` `p` join `rentees` `r` on(`p`.`rentee_id` = `r`.`rentee_id`)) join `units` `u` on(`r`.`unit_id` = `u`.`unit_id`)) ;
 
 --
 -- Indexes for dumped tables

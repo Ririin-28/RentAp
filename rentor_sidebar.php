@@ -32,13 +32,13 @@
                 <li class="sidebar-item">
                     <a href="rentor_requests.php" class="sidebar-link">
                     <i class="bi bi-house-exclamation"></i>
-                    <span>Maintenance Requests</span>
+                    <p>Maintenance Requests</p>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="rentor_maintenance_duration.php" class="sidebar-link">
                     <i class="bi bi-house-gear"></i>
-                    <span>Maintenance Duration</span>
+                    <p>Maintenance Duration</p>
                     </a>
                 </li>
             </ul>
