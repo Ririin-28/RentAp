@@ -16,7 +16,7 @@
             border: 2px solid #ddd;
             padding: 10px;
             margin: 10px;
-            height: 100px;
+            height: 110px;
             border-radius: 8px;
             text-align: center;
             transition: transform 0.2s;
@@ -56,7 +56,7 @@
             cursor: pointer;
         }
 
-        .tooltip-text {
+        .warning-tooltip-text {
             display: none;
             position: absolute;
             top: 30px;
@@ -69,6 +69,31 @@
         }
 
         .warning-icon:hover + .tooltip-text {
+            display: block;
+        }
+
+        .danger-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color:rgb(252, 0, 0);
+            cursor: pointer;
+        }
+
+        .danger-tooltip-text {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background-color:rgb(255, 0, 0);
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .danger-icon:hover + .danger-tooltip-text {
             display: block;
         }
 
@@ -158,8 +183,8 @@
                                         <div class="unit occupied">
                                             <h5>Unit 112</h5>
                                             <div class="occupant-name">John Doe</div>
-                                            <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="tooltip-text">Incoming Due Date</div>
+                                            <i class="bi bi-exclamation-triangle-fill danger-icon"></i>
+                                            <div class="danger-tooltip-text">Overdue Date</div>
                                             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#viewModal" onclick="fillModal('Occupied', 'John Doe', 'john.doe', 'john.doe@example.com', '1234567890')">View</button>
                                         </div>
                                     </div>
@@ -181,7 +206,7 @@
                                             <h5>Unit 109</h5>
                                             <div class="occupant-name">Alice Johnson</div>
                                             <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="tooltip-text">Incoming Due Date</div>
+                                            <div class="tooltip-text">Upcoming Due Date</div>
                                             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#viewModal" onclick="fillModal('Occupied', 'Alice Johnson', 'alice.johnson', 'alice.johnson@example.com', '1122334455')">View</button>
                                         </div>
                                     </div>
@@ -231,7 +256,7 @@
                                             <h5>Unit 102</h5>
                                             <div class="occupant-name">Grace Pink</div>
                                             <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="tooltip-text">Incoming Due Date</div>
+                                            <div class="tooltip-text">Upcoming Due Date</div>
                                             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#viewModal" onclick="fillModal('Occupied', 'Grace Pink', 'grace.pink', 'grace.pink@example.com', '7788990011')">View</button>
                                         </div>
                                     </div>

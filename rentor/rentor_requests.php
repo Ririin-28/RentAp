@@ -40,8 +40,8 @@
                                                     <th>Unit #</th>
                                                     <th>Rentee</th>
                                                     <th>Date</th>
-                                                    <th>Area</th>
                                                     <th>Issue</th>
+                                                    <th>Description</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
