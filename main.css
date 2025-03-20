@@ -179,7 +179,7 @@ a.sidebar-link:hover {
 
 
 /* ---------------------- Title ---------------------- */
-.title_icon {
+.rentap_Icon {
     width: 65px;
     height: 40px;
     margin-right: 10px;
@@ -238,6 +238,18 @@ button.toggle-btn img.custom-logo {
     background-color: #fff;       
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
+
+.dashboardcard {
+    flex: 1 1 calc(25% - 20px);  
+    max-width: 100%; 
+    min-width: 180px;             
+    padding: 15px;                
+    border: 2px solid #ccc;    
+    border-radius: 8px;        
+    background-color: #fff;       
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
 
 .card .numbers {
     font-size: 2rem;

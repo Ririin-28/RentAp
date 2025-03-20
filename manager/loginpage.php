@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,6 +85,9 @@
                                                     <i class="bi bi-eye-fill" id="togglePasswordIcon"></i>
                                                 </button>
                                             </div>
+                                            <small class="form-text text-muted">
+                                                Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+                                            </small>
                                         </div>
                                         <div class="mb-4">
                                             <div class="form-check">
@@ -135,31 +136,18 @@
                     inputPassword: $('#inputPassword').val()
                 };
 
-                $.ajax({
-                    url: window.location.href,
-                    method: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    beforeSend: function() {
-                        $('.login-btn').prop('disabled', true).html(
-                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-                        );
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $('#loginResponse').html('<div class="alert alert-success">Login successful! Redirecting...</div>');
-                            window.location.href = response.redirect;
-                        } else {
-                            $('#loginResponse').html('<div class="alert alert-danger">' + response.message + '</div>');
-                        }
-                    },
-                    error: function() {
-                        $('#loginResponse').html('<div class="alert alert-danger">Error occurred. Please try again later.</div>');
-                    },
-                    complete: function() {
-                        $('.login-btn').prop('disabled', false).html('Sign In');
-                    }
-                });
+                // Password validation
+                const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                if (!passwordPattern.test(formData.inputPassword)) {
+                    $('#loginResponse').html('<div class="alert alert-danger">Password does not meet the required criteria.</div>');
+                    return;
+                }
+
+                // Simulate successful login
+                $('#loginResponse').html('<div class="alert alert-success">Login successful! Redirecting...</div>');
+                setTimeout(function() {
+                    window.location.href = 'dashboard.php';
+                }, 2000);
             });
         });
     </script>

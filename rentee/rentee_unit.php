@@ -28,7 +28,7 @@
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
             <div class="title-container">
-                <img src="../images/RentAp_full.png" alt="Dashboard Icon" class="title_icon">
+                <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
                 <h1>Unit</h1>
             </div>
 
@@ -38,32 +38,16 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-12 mb-5">
+                                    <div class="col-9 mb-5">
                                         <h4 class="card-title"><strong>Unit Number</strong></h4>
-                                        <p class="card-text">Unit 101</p>
+                                        <p class="card-text">You Unit Number: <strong>Unit 101</strong></p>
                                     </div>
-                                    <!-- Due Date Section -->
-                                    <div class="col-12 col-md-4">
-                                        <h4><strong>Due Date</strong></h4>
-                                        <p>Your next payment is due on: <strong>March 15, 2025</strong></p>
-                                    </div>
-
-                                    <!-- Maintenance Request Section -->
-                                    <div class="section mt-3">
-                                        <h4><strong>Request for Maintenance</strong></h4>
-                                        <form id="maintenanceForm">
-                                            <div class="mb-3">
-                                                <label for="maintenanceIssue" class="form-label">Describe the issue</label>
-                                                <textarea name="maintenanceIssue" id="maintenanceIssue" class="form-control" rows="3" required></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Submit Request</button>
-                                        </form>
-                                    </div>
-
                                     <!-- QR Code for Payment Section -->
-                                    <div class="section mt-4 d-flex justify-content-between align-items-center">
-                                        <h4><strong>QR Code for Payment</strong></h4>
-                                        <i class="bi bi-qr-code" data-bs-toggle="modal" data-bs-target="#qrCodeModal" style="font-size: 24px; cursor: pointer;"></i>
+                                    <div class="col-md-3 mb-5">
+                                        <div class="section mt-4 d-flex justify-content-between align-items-center">
+                                            <h4><strong>QR Code for Payment</strong></h4>
+                                            <i class="bi bi-qr-code" data-bs-toggle="modal" data-bs-target="#qrCodeModal" style="font-size: 24px; cursor: pointer; margin-left: 20px;"></i>
+                                        </div>
                                     </div>
 
                                     <!-- QR Code Modal -->
@@ -80,6 +64,25 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <!-- Due Date Section -->
+                                    <div class="col-12 col-md-4">
+                                        <h4><strong>Due Date</strong></h4>
+                                        <p class="mb-0">Your next payment is due on: <strong>March 15, 2025</strong></p>
+                                        <p>Payment Status: <strong style="color: red;">Pending</strong></p>
+                                    </div>
+
+                                    <!-- Maintenance Request Section -->
+                                    <div class="section mt-3">
+                                        <h4><strong>Request for Maintenance</strong></h4>
+                                        <form id="maintenanceForm">
+                                            <div class="mb-3">
+                                                <label for="maintenanceIssue" class="form-label">Describe the issue</label>
+                                                <textarea name="maintenanceIssue" id="maintenanceIssue" class="form-control" rows="3" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

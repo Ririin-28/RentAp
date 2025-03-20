@@ -4,12 +4,12 @@
             <i class="bi bi-list" alt="Toggle Sidebar" ></i>
         </button>
         <div class="sidebar-logo">
-            <a href="rentor_dashboard.php">Rentor</a>
+            <a href="manager_dashboard.php">Manager</a>
         </div>
     </div>
     <ul class="sidebar-nav">
         <li class="sidebar-item">
-            <a href="rentor_dashboard.php" class="sidebar-link">
+            <a href="manager_dashboard.php" class="sidebar-link">
                 <i class="lni lni-layout"></i>
                 <span>Dashboard</span>
             </a>
@@ -17,7 +17,7 @@
 
 
         <li class="sidebar-item">
-            <a href="rentor_apartment_management.php" class="sidebar-link">
+            <a href="manager_apartment_management.php" class="sidebar-link">
                 <i class="bi bi-building-gear"></i>
                 <span>Apartment Management</span>
             </a>
@@ -30,29 +30,29 @@
             </a>
             <ul id="accounts" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item">
-                    <a href="rentor_requests.php" class="sidebar-link">
+                    <a href="manager_requests.php" class="sidebar-link">
                     <i class="bi bi-house-exclamation"></i>
-                    <span>Maintenance Requests</span>
+                    <p>Maintenance Requests</p>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="rentor_maintenance_duration.php" class="sidebar-link">
+                    <a href="manager_maintenance_duration.php" class="sidebar-link">
                     <i class="bi bi-house-gear"></i>
-                    <span>Maintenance Duration</span>
+                    <p>Maintenance Duration</p>
                     </a>
                 </li>
             </ul>
         </li>
 
         <li class="sidebar-item">
-            <a href="rentor_rentee_profile.php" class="sidebar-link">
+            <a href="manager_rentee_profile.php" class="sidebar-link">
                 <i class="bi bi-person"></i>
                 <span>Rentee Profile</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="rentor_archive.php" class="sidebar-link">
+            <a href="manager_archive.php" class="sidebar-link">
                 <i class="bi bi-archive"></i>
                 <span>Archive</span>
             </a>
