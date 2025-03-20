@@ -147,7 +147,7 @@
 
 <body>
     <div class="wrapper">
-        <?php include '../rentor_sidebar.php'; ?>
+        <?php include '../manager_sidebar.php'; ?>
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->

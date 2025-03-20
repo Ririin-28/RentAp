@@ -15,7 +15,7 @@
 
 <body>
     <div class="wrapper">
-        <?php include '../rentor_sidebar.php'; ?>
+        <?php include '../manager_sidebar.php'; ?>
         <div class="main-content container-fluid g-0">
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
