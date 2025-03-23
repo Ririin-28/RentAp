@@ -60,7 +60,7 @@
 
     </ul>
     <div class="sidebar-footer">
-        <a href="../logout.php" class="sidebar-link">
+        <a href="manager_login.php" class="sidebar-link">
             <i class="lni lni-exit"></i>
             <span>Logout</span>
         </a>

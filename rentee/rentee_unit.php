@@ -38,9 +38,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
+                                    <!-- Due Date Section -->
                                     <div class="col-9 mb-5">
-                                        <h4 class="card-title"><strong>Unit Number</strong></h4>
-                                        <p class="card-text">You Unit Number: <strong>Unit 101</strong></p>
+                                        <h4><strong>Due Date</strong></h4>
+                                        <p class="mb-0">Your next payment is due on: <strong>March 15, 2025</strong></p>
+                                        <p>Payment Status: <strong style="color: red;">Pending</strong></p>
                                     </div>
                                     <!-- QR Code for Payment Section -->
                                     <div class="col-md-3 mb-5">
@@ -66,21 +68,48 @@
                                         </div>
                                     </div>
 
-                                    <!-- Due Date Section -->
-                                    <div class="col-12 col-md-4">
-                                        <h4><strong>Due Date</strong></h4>
-                                        <p class="mb-0">Your next payment is due on: <strong>March 15, 2025</strong></p>
-                                        <p>Payment Status: <strong style="color: red;">Pending</strong></p>
-                                    </div>
-
                                     <!-- Maintenance Request Section -->
                                     <div class="section mt-3">
                                         <h4><strong>Request for Maintenance</strong></h4>
+                                        
+                                        <!-- Dropdown Section -->
                                         <form id="maintenanceForm">
+                                            <div class="mb-3">
+                                                <label for="issueType" class="form-label">Select Issue Type</label>
+                                                <select id="issueType" class="form-select" onchange="showSubDropdown()" required>
+                                                    <option value="">-- Select Issue --</option>
+                                                    <option value="unit">Unit Maintenance</option>
+                                                    <option value="technical">Technical Issue</option>
+                                                </select>
+                                            </div>
+
+                                            <div id="unitDropdown" class="mb-3" style="display: none;">
+                                                <label for="unit" class="form-label">Unit Maintenance Issues</label>
+                                                <select id="unit" name="unit" class="form-select">
+                                                    <option>Flooring</option>
+                                                    <option>Walls and Ceiling</option>
+                                                    <option>Windows</option>
+                                                    <option>Doors</option>
+                                                    <option>Electrical</option>
+                                                    <option>Plumbing</option>
+                                                </select>
+                                            </div>
+
+                                            <div id="technicalDropdown" class="mb-3" style="display: none;">
+                                                <label for="technical" class="form-label">Technical Issues</label>
+                                                <select id="technical" name="technical" class="form-select">
+                                                    <option>Payment Error</option>
+                                                    <option>Missing Transaction</option>
+                                                    <option>Incorrect Billing Information</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Describe the issue -->
                                             <div class="mb-3">
                                                 <label for="maintenanceIssue" class="form-label">Describe the issue</label>
                                                 <textarea name="maintenanceIssue" id="maintenanceIssue" class="form-control" rows="3" required></textarea>
                                             </div>
+                                            
                                             <button type="submit" class="btn btn-primary">Submit Request</button>
                                         </form>
                                     </div>
@@ -99,10 +128,17 @@
                 document.querySelector("#sidebar").classList.toggle("expand");
             });
 
+            // Show/hide sub-dropdowns based on selection
+            function showSubDropdown() {
+                const issueType = document.getElementById('issueType').value;
+                document.getElementById('unitDropdown').style.display = (issueType === 'unit') ? 'block' : 'none';
+                document.getElementById('technicalDropdown').style.display = (issueType === 'technical') ? 'block' : 'none';
+            }
+
             document.getElementById('maintenanceForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 alert('Maintenance request submitted successfully!');
-                // Add your AJAX code here to submit the form data to the server
+                // Add AJAX code here to submit form data to the server
             });
         </script>
     </div>

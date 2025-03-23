@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,7 +53,9 @@
 </head>
 <body>
     <div class="titlebarcontainer">
-        <img src="../images/RentAp_full.png" alt="RentAp Logo" class="RentApLogo">
+        <a href="../landing_page/landing_page.php">
+            <img src="../images/RentAp_full.png" alt="RentAp Logo" class="RentApLogo">
+        </a>
         <h6 class="logoname mb-0">RentAp: Apartment Management System</h6>
     </div>
 

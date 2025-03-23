@@ -52,7 +52,9 @@
 </head>
 <body>
     <div class="titlebarcontainer">
-        <img src="../images/RentAp_full.png" alt="RentAp Logo" class="RentApLogo">
+        <a href="../landing_page/landing_page.php">
+            <img src="../images/RentAp_full.png" alt="RentAp Logo" class="RentApLogo">
+        </a>
         <h6 class="logoname mb-0">RentAp: Apartment Management System</h6>
     </div>
 
@@ -68,7 +70,7 @@
                             <div class="col-md-7">
                                 <div class="card-body p-5">
                                     <h4 class="mb-4">Welcome Back!</h4>
-                                    <p class="login-card-description mb-4">Sign in to your Rentor account</p>
+                                    <p class="login-card-description mb-4">Sign in to your Manager account</p>
                                     <form id="loginForm">
                                         <div class="mb-3">
                                             <label for="rentorID" class="form-label">Username</label>
