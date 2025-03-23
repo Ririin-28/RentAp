@@ -167,7 +167,7 @@
         }
     </style>
 </head>
-l
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
