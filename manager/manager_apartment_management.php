@@ -28,11 +28,11 @@
         }
 
         .occupied {
-            background-color: #d4edda;
+            background-color: #fff3cd;
         }
 
         .available {
-            background-color: #fff3cd;
+            background-color: #d4edda;
         }
 
         .maintenance {
@@ -68,7 +68,7 @@
             font-size: 12px;
         }
 
-        .warning-icon:hover + .tooltip-text {
+        .warning-icon:hover + .warning-tooltip-text {
             display: block;
         }
 
@@ -165,11 +165,11 @@
                                 <div class="legend">
                                     <div class="legend-item">
                                         <div class="legend-color" style="background-color: #d4edda;"></div>
-                                        <div class="legend-text">Occupied</div>
+                                        <div class="legend-text">Available</div>
                                     </div>
                                     <div class="legend-item">
                                         <div class="legend-color" style="background-color: #fff3cd;"></div>
-                                        <div class="legend-text">Available</div>
+                                        <div class="legend-text">Occupied</div>
                                     </div>
                                     <div class="legend-item">
                                         <div class="legend-color" style="background-color: #f8d7da;"></div>
@@ -206,7 +206,7 @@
                                             <h5>Unit 109</h5>
                                             <div class="occupant-name">Alice Johnson</div>
                                             <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="tooltip-text">Upcoming Due Date</div>
+                                            <div class="warning-tooltip-text">Upcoming Due Date</div>
                                             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#viewModal" onclick="fillModal('Occupied', 'Alice Johnson', 'alice.johnson', 'alice.johnson@example.com', '1122334455')">View</button>
                                         </div>
                                     </div>
@@ -256,7 +256,7 @@
                                             <h5>Unit 102</h5>
                                             <div class="occupant-name">Grace Pink</div>
                                             <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="tooltip-text">Upcoming Due Date</div>
+                                            <div class="warning-tooltip-text">Upcoming Due Date</div>
                                             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#viewModal" onclick="fillModal('Occupied', 'Grace Pink', 'grace.pink', 'grace.pink@example.com', '7788990011')">View</button>
                                         </div>
                                     </div>

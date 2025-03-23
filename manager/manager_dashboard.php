@@ -96,44 +96,45 @@
                                     </div>
                                 </div>
 
-                                <!-- Machine Learning Insights -->
-                                <div class="row mt-4">
-                                    <div class="col-md-12">
-                                        <div class="cardBox">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Peak Rental Periods</h5>
-                                                <p class="card-text">
-                                                    Based on machine learning analysis, the peak rental periods are typically during the months of May and June.
-                                                </p>
-                                                <div id="peakRentalChart" style="height: 300px;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Incoming Due Dates -->
-                        <div class="card mt-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Incoming Due Dates</h5>
-                                <ul class="list-group">
-                                    <li class="list-group-item">Room 101 - Due on 2025-03-15</li>
-                                    <li class="list-group-item">Room 205 - Due on 2025-03-20</li>
-                                </ul>
-                            </div>
-                        </div>
+            <!-- Incoming Due Dates -->
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Incoming Due Dates</strong></h5>
+                        <ul class="list-group">
+                            <li class="list-group-item">Room 101 - Due on 2025-03-15</li>
+                            <li class="list-group-item">Room 205 - Due on 2025-03-20</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- Late Payments -->
-                        <div class="card mt-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Late Payments</h5>
-                                <ul class="list-group">
-                                    <li class="list-group-item">Room 303 - Overdue by 5 days</li>
-                                    <li class="list-group-item">Room 402 - Overdue by 3 days</li>
-                                </ul>
-                            </div>
-                        </div>
+            <!-- Graph Section -->
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Peak Rental Periods</strong></h5>
+                        <p class="card-text">
+                            Based on machine learning analysis, the peak rental periods are typically during the months of May and June.
+                        </p>
+                        <div id="peakRentalChart" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Late Payments -->
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>Late Payments</strong></h5>
+                        <ul class="list-group">
+                            <li class="list-group-item">Room 303 - Overdue by 5 days</li>
+                            <li class="list-group-item">Room 402 - Overdue by 3 days</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
                     </div>
                 </div>
             </div>

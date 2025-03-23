@@ -39,7 +39,6 @@
                                                 <th>Contact Number</th>
                                                 <th>Email</th>
                                                 <th>Unit Number</th>
-                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -49,11 +48,6 @@
                                                 <td>09123456789</td>
                                                 <td>john.doe@example.com</td>
                                                 <td>101</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" onclick="editRentee(this)">Edit</button>
-                                                    <button class="btn btn-success btn-sm d-none" onclick="saveRentee(this)">Save</button>
-                                                    <button class="btn btn-secondary btn-sm d-none" onclick="cancelEdit(this)">Cancel</button>
-                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>2</td>
@@ -61,11 +55,6 @@
                                                 <td>09876543210</td>
                                                 <td>jane.smith@example.com</td>
                                                 <td>102</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" onclick="editRentee(this)">Edit</button>
-                                                    <button class="btn btn-success btn-sm d-none" onclick="saveRentee(this)">Save</button>
-                                                    <button class="btn btn-secondary btn-sm d-none" onclick="cancelEdit(this)">Cancel</button>
-                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>3</td>
@@ -73,11 +62,6 @@
                                                 <td>09112233445</td>
                                                 <td>alice.johnson@example.com</td>
                                                 <td>103</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" onclick="editRentee(this)">Edit</button>
-                                                    <button class="btn btn-success btn-sm d-none" onclick="saveRentee(this)">Save</button>
-                                                    <button class="btn btn-secondary btn-sm d-none" onclick="cancelEdit(this)">Cancel</button>
-                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>4</td>
@@ -85,11 +69,6 @@
                                                 <td>09223344556</td>
                                                 <td>bob.brown@example.com</td>
                                                 <td>104</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" onclick="editRentee(this)">Edit</button>
-                                                    <button class="btn btn-success btn-sm d-none" onclick="saveRentee(this)">Save</button>
-                                                    <button class="btn btn-secondary btn-sm d-none" onclick="cancelEdit(this)">Cancel</button>
-                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>5</td>
@@ -97,11 +76,6 @@
                                                 <td>09334455667</td>
                                                 <td>carol.white@example.com</td>
                                                 <td>105</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" onclick="editRentee(this)">Edit</button>
-                                                    <button class="btn btn-success btn-sm d-none" onclick="saveRentee(this)">Save</button>
-                                                    <button class="btn btn-secondary btn-sm d-none" onclick="cancelEdit(this)">Cancel</button>
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -120,45 +94,6 @@
         hamBurger.addEventListener("click", function () {
             document.querySelector("#sidebar").classList.toggle("expand");
         });
-
-        function editRentee(button) {
-            const row = button.closest('tr');
-            const cells = row.querySelectorAll('td');
-            for (let i = 1; i < cells.length - 1; i++) {
-                const cell = cells[i];
-                const text = cell.textContent;
-                cell.innerHTML = `<input type="text" class="form-control" value="${text}">`;
-            }
-            button.classList.add('d-none');
-            button.nextElementSibling.classList.remove('d-none');
-            button.nextElementSibling.nextElementSibling.classList.remove('d-none');
-        }
-
-        function saveRentee(button) {
-            const row = button.closest('tr');
-            const cells = row.querySelectorAll('td');
-            for (let i = 1; i < cells.length - 1; i++) {
-                const cell = cells[i];
-                const input = cell.querySelector('input');
-                cell.textContent = input.value;
-            }
-            button.classList.add('d-none');
-            button.previousElementSibling.classList.remove('d-none');
-            button.nextElementSibling.classList.add('d-none');
-        }
-
-        function cancelEdit(button) {
-            const row = button.closest('tr');
-            const cells = row.querySelectorAll('td');
-            for (let i = 1; i < cells.length - 1; i++) {
-                const cell = cells[i];
-                const input = cell.querySelector('input');
-                cell.textContent = input.defaultValue;
-            }
-            button.classList.add('d-none');
-            button.previousElementSibling.classList.add('d-none');
-            button.previousElementSibling.previousElementSibling.classList.remove('d-none');
-        }
     </script>
 </body>
 

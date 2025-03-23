@@ -251,7 +251,7 @@
         <div class="container-fluid">
             <div class="row align-items-center features-container">
                 <div class="col-md-4 d-flex align-items-center justify-content-center">
-                    <h2>Where's the <br>Apartment Located:</h2>
+                    <h2>Apartment <br>Location</h2>
                 </div>
                 <div class="col-md-8">
                     <div id="map"></div>

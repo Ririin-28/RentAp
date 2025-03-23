@@ -11,11 +11,32 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../main.css">
+    <style>
+        .payment-container {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .payment-container h4 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .payment-container table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+    </style>
 </head>
 
 <body>
     <div class="wrapper">
         <?php include '../rentee_sidebar.php'; ?>
+        
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
             <!-- Title Container -->
@@ -35,10 +56,13 @@
                                         <h4 class="card-title"><strong>Unit Number</strong></h4>
                                         <p class="card-text">Unit 101</p>
                                     </div>
-                                    <!-- First Column -->
+                                    
+                                    <!-- Personal Information -->
                                     <div class="col-12 mb-3">
-                                    <h3 class="card-title"><strong>Personal Information</strong></h3>
+                                        <h3 class="card-title"><strong>Personal Information</strong></h3>
                                     </div>
+
+                                    <!-- First Column -->
                                     <div class="col-12 col-md-4">
                                         <div class="row">
                                             <div class="col-12 mb-4">
@@ -53,7 +77,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Second Column -->
                                     <div class="col-12 col-md-4">
                                         <div class="row">
@@ -81,14 +105,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Payment History Section -->
-            <div class="row mt-4">
-                <div class="col-12">
+                <!-- Payment History Section -->
+                <div class="payment-container">
                     <h4 class="card-title"><strong>Payment History</strong></h4>
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
                             <tr>
                                 <th scope="col">Date</th>
                                 <th scope="col">Amount</th>
@@ -99,17 +121,17 @@
                             <tr>
                                 <td>January 15, 2025</td>
                                 <td>$500</td>
-                                <td>Paid</td>
+                                <td><span class="badge bg-success">Paid</span></td>
                             </tr>
                             <tr>
                                 <td>February 15, 2025</td>
                                 <td>$500</td>
-                                <td>Paid</td>
+                                <td><span class="badge bg-success">Paid</span></td>
                             </tr>
                             <tr>
                                 <td>March 15, 2025</td>
                                 <td>$500</td>
-                                <td>Pending</td>
+                                <td><span class="badge bg-warning text-dark">Pending</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -154,40 +176,11 @@
         });
 
         cancelButton.addEventListener('click', function () {
-            fullNameText.classList.remove('d-none');
-            fullNameInput.classList.add('d-none');
-            facebookNameText.classList.remove('d-none');
-            facebookNameInput.classList.add('d-none');
-            phoneNumberText.classList.remove('d-none');
-            phoneNumberInput.classList.add('d-none');
-            emailText.classList.remove('d-none');
-            emailInput.classList.add('d-none');
-
-            editProfileButton.classList.remove('d-none');
-            cancelButton.classList.add('d-none');
-            saveButton.classList.add('d-none');
+            window.location.reload();
         });
 
         saveButton.addEventListener('click', function () {
-            fullNameText.textContent = fullNameInput.value;
-            facebookNameText.textContent = facebookNameInput.value;
-            phoneNumberText.textContent = phoneNumberInput.value;
-            emailText.textContent = emailInput.value;
-
-            fullNameText.classList.remove('d-none');
-            fullNameInput.classList.add('d-none');
-            facebookNameText.classList.remove('d-none');
-            facebookNameInput.classList.add('d-none');
-            phoneNumberText.classList.remove('d-none');
-            phoneNumberInput.classList.add('d-none');
-            emailText.classList.remove('d-none');
-            emailInput.classList.add('d-none');
-
-            editProfileButton.classList.remove('d-none');
-            cancelButton.classList.add('d-none');
-            saveButton.classList.add('d-none');
-
-            // Add your AJAX code here to save the changes to the server
+            alert("Profile updated successfully!");
         });
     </script>
 </body>
