@@ -18,6 +18,7 @@
         border-bottom: none !important;
     }
 </style>
+
 <body>
     <div class="wrapper">
         <?php include '../manager_sidebar.php'; ?>
@@ -35,7 +36,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                            <h4 class="card-title"><strong>Overview</strong></h4>
+                                <h4 class="card-title"><strong>Overview</strong></h4>
                                 <div class="row">
                                     <!-- Overview Section -->
                                     <div class="content container mt-4">
@@ -48,7 +49,8 @@
                                                         <p class="card-text cardName">Occupied Rooms</p>
                                                     </div>
                                                     <div>
-                                                        <img src="assets/imgs/studentdbrd.png" alt="" class="img-fluid" style="width: 50px;">
+                                                        <img src="assets/imgs/studentdbrd.png" alt="" class="img-fluid"
+                                                            style="width: 50px;">
                                                     </div>
                                                 </div>
                                             </div>
@@ -61,7 +63,8 @@
                                                         <p class="card-text cardName">Rooms Under Maintenance</p>
                                                     </div>
                                                     <div>
-                                                        <img src="assets/imgs/coursedbrd.png" alt="" class="img-fluid" style="width: 50px;">
+                                                        <img src="assets/imgs/coursedbrd.png" alt="" class="img-fluid"
+                                                            style="width: 50px;">
                                                     </div>
                                                 </div>
                                             </div>
@@ -70,11 +73,14 @@
                                             <div class="col-md-4 dashboardcard">
                                                 <div class="text-center p-3">
                                                     <div>
-                                                        <h5 class="card-title numbers" id="totalStudents"><></h5>
+                                                        <h5 class="card-title numbers" id="totalStudents">
+                                                            <>
+                                                        </h5>
                                                         <p class="card-text cardName">Total Late Payments</p>
                                                     </div>
                                                     <div>
-                                                        <img src="assets/imgs/sectiondbrd.png" alt="" class="img-fluid" style="width: 50px;">
+                                                        <img src="assets/imgs/sectiondbrd.png" alt="" class="img-fluid"
+                                                            style="width: 50px;">
                                                     </div>
                                                 </div>
                                             </div>
@@ -84,9 +90,9 @@
                                                 <div class="text-center p-3">
                                                     <div>
                                                         <?php
-                                                            date_default_timezone_set('Asia/Manila');
-                                                            $date = new DateTime();
-                                                            echo '<h5 class="card-title numbers">' . $date->format('F j, Y') . '</h5>';
+                                                        date_default_timezone_set('Asia/Manila');
+                                                        $date = new DateTime();
+                                                        echo '<h5 class="card-title numbers">' . $date->format('F j, Y') . '</h5>';
                                                         ?>
                                                         <p class="card-text cardName">Date Today</p>
                                                     </div>
@@ -97,75 +103,73 @@
                                 </div>
 
 
-            <!-- Incoming Due Dates -->
-            <div class="col-12 mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><strong>Incoming Due Dates</strong></h5>
-                        <ul class="list-group">
-                            <li class="list-group-item">Room 101 - Due on 2025-03-15</li>
-                            <li class="list-group-item">Room 205 - Due on 2025-03-20</li>
-                        </ul>
+                                <!-- Upcoming Due Dates and Late Payments in One Row -->
+                                <div class="row mt-4">
+                                    <!-- Upcoming Due Dates -->
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><strong>Upcoming Due Dates</strong></h5>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">Room 101 - Due on 2025-03-15</li>
+                                                <li class="list-group-item">Room 205 - Due on 2025-03-20</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Late Payments -->
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><strong>Late Payments</strong></h5>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">Room 303 - Overdue by 5 days</li>
+                                                <li class="list-group-item">Room 402 - Overdue by 3 days</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Graph Section -->
+                                <div class="col-12 mt-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><strong>Peak Rental Periods</strong></h5>
+                                        <p class="card-text">
+                                            Based on machine learning analysis, the peak rental periods are
+                                            typically during the months of May and June.
+                                        </p>
+                                        <div id="peakRentalChart" style="height: 300px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            <script>
+                const hamBurger = document.querySelector(".toggle-btn");
+                hamBurger.addEventListener("click", function () {
+                    document.querySelector("#sidebar").classList.toggle("expand");
+                });
 
-            <!-- Graph Section -->
-            <div class="col-12 mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><strong>Peak Rental Periods</strong></h5>
-                        <p class="card-text">
-                            Based on machine learning analysis, the peak rental periods are typically during the months of May and June.
-                        </p>
-                        <div id="peakRentalChart" style="height: 300px;"></div>
-                    </div>
-                </div>
-            </div>
+                // Sample data for peak rental periods chart
+                var options = {
+                    chart: {
+                        type: 'line',
+                        height: 300
+                    },
+                    series: [{
+                        name: 'Rental Demand',
+                        data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 110, 80, 60]
+                    }],
+                    xaxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    }
+                };
 
-            <!-- Late Payments -->
-            <div class="col-12 mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><strong>Late Payments</strong></h5>
-                        <ul class="list-group">
-                            <li class="list-group-item">Room 303 - Overdue by 5 days</li>
-                            <li class="list-group-item">Room 402 - Overdue by 3 days</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script>
-        const hamBurger = document.querySelector(".toggle-btn");
-        hamBurger.addEventListener("click", function () {
-            document.querySelector("#sidebar").classList.toggle("expand");
-        });
-
-        // Sample data for peak rental periods chart
-        var options = {
-            chart: {
-                type: 'line',
-                height: 300
-            },
-            series: [{
-                name: 'Rental Demand',
-                data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 110, 80, 60]
-            }],
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            }
-        };
-
-        var chart = new ApexCharts(document.querySelector("#peakRentalChart"), options);
-        chart.render();
-    </script>
+                var chart = new ApexCharts(document.querySelector("#peakRentalChart"), options);
+                chart.render();
+            </script>
 </body>
 
 </html>

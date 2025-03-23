@@ -64,6 +64,11 @@
 
                                     <!-- First Column -->
                                     <div class="col-12 col-md-4">
+                                    <div class="col-12 mb-4">
+                                                <h4 class="card-title"><strong>Rentee ID</strong></h4>
+                                                <p class="card-text" id="renteeIDText">10001</p>
+                                                <input type="text" class="form-control d-none" id="renteeIDInput" value="10001">
+                                            </div>
                                         <div class="row">
                                             <div class="col-12 mb-4">
                                                 <h4 class="card-title"><strong>Full Name</strong></h4>
@@ -151,6 +156,8 @@
         const cancelButton = document.getElementById('cancelButton');
         const saveButton = document.getElementById('saveButton');
 
+        const renteeIDText = document.getElementById('renteeIDText');
+        const renteeIDInput = document.getElementById('renteeIDInput');
         const fullNameText = document.getElementById('fullNameText');
         const fullNameInput = document.getElementById('fullNameInput');
         const facebookNameText = document.getElementById('facebookNameText');
@@ -161,6 +168,8 @@
         const emailInput = document.getElementById('emailInput');
 
         editProfileButton.addEventListener('click', function () {
+            renteeIDText.classList.add('d-none');
+            renteeIDInput.classList.remove('d-none');
             fullNameText.classList.add('d-none');
             fullNameInput.classList.remove('d-none');
             facebookNameText.classList.add('d-none');
