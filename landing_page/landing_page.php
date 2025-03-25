@@ -264,15 +264,18 @@
     <footer class="footer" id="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 contact-info">
+               <div class="col-md-1 contact-info align-items-left">
+                    <img src="../images/RentAp_logo.png" alt="RentAp Logo" style="height: 60px; margin-right: 10px;">
+                </div>
+                <div class="col-md-3 contact-info">
                     <i class="bi bi-geo-alt"></i>
                     <p>Millionaire's Village, 4 Silver, Novaliches, Quezon City, 1123 Metro Manila</p>
                 </div>
-                <div class="col-md-4 contact-info">
+                <div class="col-md-3 contact-info">
                     <i class="bi bi-envelope"></i>
                     <p>rentap@gmail.com</p>
                 </div>
-                <div class="col-md-4 contact-info">
+                <div class="col-md-3 contact-info">
                     <i class="bi bi-telephone"></i>
                     <p>0912 345 6789</p>
                 </div>
