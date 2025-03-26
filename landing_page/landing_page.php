@@ -192,7 +192,8 @@
                 <img src="../images/RentAp_logo.png" alt="RentAp Logo" style="height: 40px; margin-right: 10px;">
                 <span>RentAp</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -210,7 +211,8 @@
                         <a class="nav-link" href="#footer">Contact</a> <!-- Links to the Footer section -->
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white px-3" href="../rentee/rentee_login.php" style="border-radius: 20px;">Login</a>
+                        <a class="nav-link btn btn-primary text-white px-3" href="../rentee/rentee_login.php"
+                            style="border-radius: 20px;">Login</a>
                     </li>
                 </ul>
             </div>
@@ -248,11 +250,13 @@
                                 <img src="../images/feature3.png" class="d-block w-100" alt="About Us 3">
                             </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel"
+                            data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel"
+                            data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -267,9 +271,11 @@
         <div class="container text-center">
             <h2>About Us</h2>
             <p class="lead" style="text-align: justify; max-width: 1000px; margin: 0 auto;">
-                RentAp is an innovative apartment rental management system designed to streamline the rental process for both property owners and tenants. Our platform eliminates the hassle of manual rent tracking, improves communication, and ensures a seamless rental experience.
+                RentAp is an innovative apartment rental management system designed to streamline the rental process for
+                both property owners and tenants. Our platform eliminates the hassle of manual rent tracking, improves
+                communication, and ensures a seamless rental experience.
             </p>
-        
+
             <div class="row mt-5">
                 <!-- Rent Tracking -->
                 <div class="col-md-4 about-item">
@@ -277,14 +283,14 @@
                     <h4>Easy Rent Tracking</h4>
                     <p>Monitor payments, send reminders, and stay updated with automated tracking features.</p>
                 </div>
-            
+
                 <!-- Tenant Management -->
                 <div class="col-md-4 about-item">
                     <i class="bi bi-people text-success" style="font-size: 3rem;"></i>
                     <h4>Tenant Management</h4>
                     <p>Keep track of tenant information, lease agreements, and rental history effortlessly.</p>
                 </div>
-            
+
                 <!-- Maintenance Requests -->
                 <div class="col-md-4 about-item">
                     <i class="bi bi-tools text-danger" style="font-size: 3rem;"></i>
@@ -311,26 +317,32 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer" id="footer">
-        <div class="container">
+    <footer class="text-white py-4" style="background-color: #333333;">
+        <div class="container-fluid"> 
             <div class="row">
-               <div class="col-md-2 contact-info">
-                    <img src="../images/RentAp_logo.png" alt="RentAp Logo" style="height: 100px; margin-right: 80px;">
+                <!-- Logo and Description -->
+                <div class="col-md-4 d-flex flex-column">
+                    <img src="../images/RentAp_logo.png" alt="RentAp Logo" class="h-auto" style="width: 90px; height: auto; margin-bottom: 10px; margin-left: 20px;">
+                    <p class="mb-0" style="margin-left: 20px;">Rentap was developed for <br>Garcia's Apartment</p>
                 </div>
-                <div class="col-md-4 contact-info">
-                    <i class="bi bi-geo-alt"></i>
-                    <p>Millionaire's Village, 4 Silver, Novaliches, Quezon City, 1123 Metro Manila</p>
+
+                <!-- Location -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Location</h5>
+                    <p class="mb-1"><i class="bi bi-geo-alt"></i> Millionaire's Village, 4 Silver, Novaliches, Quezon
+                        City, 1123 Metro Manila</p>
+                    </ul>
                 </div>
-                <div class="col-md-4 contact-info">
-                    <i class="bi bi-envelope"></i>
-                    <p>rentap@gmail.com</p>
-                </div>
-                <div class="col-md-2 contact-info">
-                    <i class="bi bi-telephone"></i>
-                    <p>0912 345 6789</p>
+
+                <!-- Contact Information -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Contact Us</h5>
+                    <p class="mb-0"><i class="bi bi-telephone"></i> 0912 345 6789</p>
+                    <p class="mb-0"><i class="bi bi-envelope"></i> rentap@gmail.com</p>
                 </div>
             </div>
-            <p>&copy; 2025 RentAp. All rights reserved.</p>
+            <hr class="my-4">
+            <p class="text-center mb-0">&copy; 2025 RentAp. All Rights Reserved.</p>
         </div>
     </footer>
 

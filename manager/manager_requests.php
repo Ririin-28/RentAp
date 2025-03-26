@@ -21,7 +21,7 @@
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
-                <h1>Rentee Maintenance Requests</h1>
+                <h1>Maintenance Requests</h1>
             </div>
 
             <!-- Content Container -->

@@ -21,7 +21,7 @@
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
-                <h1>Rentee Maintenance Duration</h1>
+                <h1>Maintenance Agreement Duration</h1>
             </div>
 
             <!-- Content Container -->
@@ -30,7 +30,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title"><strong>Agreement Duration</strong></h4>
+                                <h4 class="card-title"><strong>Maintenance Duration</strong></h4>
                                 <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addRenteeModal">Add Rentee</button>
                                 <div class="table-responsive">
                                     <table class="table">
