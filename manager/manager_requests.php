@@ -16,8 +16,10 @@
 <body>
     <div class="wrapper">
         <?php include '../manager_sidebar.php'; ?>
+        
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
+            
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
@@ -53,8 +55,8 @@
                                                     <td>Mar 8</td>
                                                     <td><span class="badge bg-warning">Pending</span></td>
                                                     <td>
-                                                        <button class="btn btn-info btn-sm" onclick="openDetailsModal(event, '101', 'Electrical', 'Light Bulb', 'Bulb in living room flickering', 'Pending')">
-                                                            <i class="bi bi-eye"></i> View
+                                                        <button class="btn btn-primary btn-sm view-button" onclick="openDetailsModal(event, '101', 'Electrical', 'Light Bulb', 'Bulb in living room flickering', 'Pending')">
+                                                            View
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -64,8 +66,8 @@
                                                     <td>Mar 7</td>
                                                     <td><span class="badge bg-warning">Pending</span></td>
                                                     <td>
-                                                        <button class="btn btn-info btn-sm" onclick="openDetailsModal(event, '202', 'Plumbing', 'Toilet', 'Flush not working', 'Pending')">
-                                                            <i class="bi bi-eye"></i> View
+                                                        <button class="btn btn-primary btn-sm view-button" onclick="openDetailsModal(event, '202', 'Plumbing', 'Toilet', 'Flush not working', 'Pending')">
+                                                            View
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -86,8 +88,8 @@
                                                     <td>Mar 5</td>
                                                     <td><span class="badge bg-warning">Pending</span></td>
                                                     <td>
-                                                        <button class="btn btn-info btn-sm" onclick="openDetailsModal(event, '408', 'Walls and Ceiling', 'Ceiling', 'Water leakage', 'Pending')">
-                                                            <i class="bi bi-eye"></i> View
+                                                        <button class="btn btn-primary btn-sm view-button" onclick="openDetailsModal(event, '408', 'Walls and Ceiling', 'Ceiling', 'Water leakage', 'Pending')">
+                                                            View
                                                         </button>
                                                     </td>
                                                 </tr>
