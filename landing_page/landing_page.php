@@ -15,8 +15,8 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: rgb(219, 219, 219); /* Set background color */
-            scroll-behavior: smooth; /* Enable smooth scrolling */
+            background-color: rgb(219, 219, 219);
+            scroll-behavior: smooth;
         }
 
         .navbar {
@@ -109,11 +109,27 @@
         }
 
         .about-section p {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #666;
-            text-align: center;
-            max-width: 800px;
+            text-align: justify;
+            max-width: 1000px;
             margin: 0 auto;
+        }
+
+        .about-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .about-item i {
+            margin-bottom: 15px;
+        }
+
+        .about-item h4 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         #map {
@@ -246,6 +262,40 @@
         </div>
     </section>
 
+    <!-- About Us Section with Icons -->
+    <section id="about" class="about-section">
+        <div class="container text-center">
+            <h2>About Us</h2>
+            <p class="lead" style="text-align: justify; max-width: 1000px; margin: 0 auto;">
+                RentAp is an innovative apartment rental management system designed to streamline the rental process for both property owners and tenants. Our platform eliminates the hassle of manual rent tracking, improves communication, and ensures a seamless rental experience.
+            </p>
+        
+            <div class="row mt-5">
+                <!-- Rent Tracking -->
+                <div class="col-md-4 about-item">
+                    <i class="bi bi-cash-stack text-primary" style="font-size: 3rem;"></i>
+                    <h4>Easy Rent Tracking</h4>
+                    <p>Monitor payments, send reminders, and stay updated with automated tracking features.</p>
+                </div>
+            
+                <!-- Tenant Management -->
+                <div class="col-md-4 about-item">
+                    <i class="bi bi-people text-success" style="font-size: 3rem;"></i>
+                    <h4>Tenant Management</h4>
+                    <p>Keep track of tenant information, lease agreements, and rental history effortlessly.</p>
+                </div>
+            
+                <!-- Maintenance Requests -->
+                <div class="col-md-4 about-item">
+                    <i class="bi bi-tools text-danger" style="font-size: 3rem;"></i>
+                    <h4>Maintenance Requests</h4>
+                    <p>Tenants can easily submit repair requests, and landlords can respond efficiently.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- Where's the apartment located -->
     <section id="location" class="features-section">
         <div class="container-fluid">
@@ -264,18 +314,18 @@
     <footer class="footer" id="footer">
         <div class="container">
             <div class="row">
-               <div class="col-md-1 contact-info align-items-left">
-                    <img src="../images/RentAp_logo.png" alt="RentAp Logo" style="height: 60px; margin-right: 10px;">
+               <div class="col-md-2 contact-info">
+                    <img src="../images/RentAp_logo.png" alt="RentAp Logo" style="height: 100px; margin-right: 80px;">
                 </div>
-                <div class="col-md-3 contact-info">
+                <div class="col-md-4 contact-info">
                     <i class="bi bi-geo-alt"></i>
                     <p>Millionaire's Village, 4 Silver, Novaliches, Quezon City, 1123 Metro Manila</p>
                 </div>
-                <div class="col-md-3 contact-info">
+                <div class="col-md-4 contact-info">
                     <i class="bi bi-envelope"></i>
                     <p>rentap@gmail.com</p>
                 </div>
-                <div class="col-md-3 contact-info">
+                <div class="col-md-2 contact-info">
                     <i class="bi bi-telephone"></i>
                     <p>0912 345 6789</p>
                 </div>
@@ -287,7 +337,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        // Initialize the map
         var map = L.map('map').setView([14.723024323409765, 121.03681689362779], 14); // Coordinates for Quezon City
 
         // Add OpenStreetMap tiles
