@@ -294,6 +294,13 @@
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#endLeaseModal">End Lease</button>
                             </div>
+                            <!-- QR Code Upload Section -->
+                            <h4 class="card-title"><strong>QR Code Upload</strong></h4>
+                            <div class="mb-3">
+                                <input type="file" class="form-control" id="qrCodeUpload" accept="image/*" required>
+                                <small class="form-text text-muted">Upload a QR code image for payment (e.g., PNG,
+                                    JPG).</small>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -38,7 +38,7 @@
                                                 <strong class="text-primary">March 15, 2025</strong>
                                             </p>
                                             <p class="mb-0">Payment Status: 
-                                                <span class="badge bg-primary">Pending</span>
+                                                <span class="badge bg-warning">Pending</span>
                                             </p>
                                         </div>
                                     </div>
