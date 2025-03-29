@@ -16,102 +16,115 @@
 <body>
     <div class="wrapper">
         <?php include '../rentee_sidebar.php'; ?>
-        
+
         <div class="main-content container-fluid g-0">
-            <div class="title-container">
+            <div class="title-container text-center mb-4">
                 <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
-                <h1>Unit</h1>
+                <h1>Unit Management</h1>
             </div>
 
             <div class="content-container">
                 <div class="row">
                     <div class="col-12">
-
-                        <!-- Due Date and QR Code Section -->
-                        <div class="card mb-3">
+                        <div class="card">
                             <div class="card-body p-4">
-                                <div class="row align-items-center">
-                                    <div class="col-md-9">
-                                        <h4 class="fw-bold">Due Date</h4>
-                                        <div class="p-3 rounded-3">
-                                            <p class="mb-2">Your next payment is due on: 
-                                                <strong class="text-primary">March 15, 2025</strong>
-                                            </p>
-                                            <p class="mb-0">Payment Status: 
-                                                <span class="badge bg-warning">Pending</span>
-                                            </p>
+                                <h4 class="fw-bold mb-4">Unit Management</h4>
+                                <ul class="nav nav-tabs" id="unitManagementTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="dueDateTab" data-bs-toggle="tab"
+                                            data-bs-target="#dueDateContent" type="button" role="tab"
+                                            aria-controls="dueDateContent" aria-selected="true">Manage Payment</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="maintenanceTab" data-bs-toggle="tab"
+                                            data-bs-target="#maintenanceContent" type="button" role="tab"
+                                            aria-controls="maintenanceContent" aria-selected="false">Request
+                                            Maintenance</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content mt-4" id="unitManagementTabContent">
+                                    <div class="tab-pane fade show active" id="dueDateContent" role="tabpanel"
+                                        aria-labelledby="dueDateTab">
+                                        <div class="row gy-4">
+                                            <!-- Due Date Section -->
+                                            <div class="col-lg-6">
+                                                <h5 class="fw-bold">📅 Due Date</h5>
+                                                <div class="p-3 border rounded-3 bg-light">
+                                                    <p class="mb-2">
+                                                        <strong>Monthly Rent Due Date:</strong>
+                                                        <span class="text-primary fw-bold">March 15, 2025</span>
+                                                    </p>
+                                                    <p class="mb-0">
+                                                        <strong>Payment Status:</strong>
+                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Online Payment Section -->
+                                            <div class="col-lg-6 text-center">
+                                                <h5 class="fw-bold">💳 Online Payment</h5>
+                                                <button class="btn btn-outline-primary mt-3 p-3" data-bs-toggle="modal"
+                                                    data-bs-target="#qrCodeModal">
+                                                    <i class="bi bi-qr-code" style="font-size: 2rem;"></i> <br>
+                                                    Scan to Pay
+                                                </button>
+                                            </div>
+
+                                            <!-- Upload Proof of Payment -->
+                                            <div class="col-12">
+                                                <h5 class="fw-bold">📤 Upload Proof of Payment</h5>
+                                                <form id="paymentProofForm" class="needs-validation" novalidate>
+                                                    <div class="input-group">
+                                                        <input type="file" class="form-control" id="paymentProof"
+                                                            accept="image/*,application/pdf" required>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="bi bi-upload"></i> Upload
+                                                        </button>
+                                                    </div>
+                                                    <div class="invalid-feedback">Please upload a valid payment proof.</div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 text-center">
-                                        <h4 class="fw-bold">QR Code for Payment:</h4>
-                                        <button class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#qrCodeModal" style="font-size: 2rem;">
-                                            <i class="bi bi-qr-code"></i>
-                                        </button>
+
+                                    <div class="tab-pane fade" id="maintenanceContent" role="tabpanel"
+                                        aria-labelledby="maintenanceTab">
+                                        <h5 class="fw-bold mb-4">🛠️ Request Maintenance</h5>
+                                        <form id="maintenanceForm" class="needs-validation" novalidate>
+                                            <div class="row gy-4">
+                                                <!-- Select Category -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">📌 Select a Category</label>
+                                                    <select id="issueType" class="form-select" required>
+                                                        <option value="">-- Select Category --</option>
+                                                        <option value="unit">Unit Maintenance</option>
+                                                        <option value="technical">Technical Issue</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please select a category.</div>
+                                                </div>
+
+                                                <!-- Describe the Issue -->
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold">✏️ Describe the Issue</label>
+                                                    <textarea id="maintenanceIssue" class="form-control" rows="4"
+                                                        placeholder="Provide details about the issue..." required></textarea>
+                                                    <div class="invalid-feedback">Please describe the issue.</div>
+                                                </div>
+
+                                                <!-- Submit Button -->
+                                                <div class="text-end mt-4">
+                                                    <button type="button" class="btn btn-primary p-3" data-bs-toggle="modal"
+                                                        data-bs-target="#confirmModal">
+                                                        <i class="bi bi-send"></i> Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Maintenance Request Section -->
-                        <div class="card">
-                            <div class="card-body p-4">
-                                <h4 class="fw-bold">Request for Maintenance</h4>
-                                <form id="maintenanceForm" class="needs-validation" novalidate>
-                                    <div class="row g-4">
-                                        
-                                        <!-- Issue Type Dropdown -->
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold">Select a Category</label>
-                                            <select id="issueType" class="form-select" required>
-                                                <option value="">-- Select Category --</option>
-                                                <option value="unit">Unit Maintenance</option>
-                                                <option value="technical">Technical Issue</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select a category.</div>
-                                        </div>
-
-                                        <!-- Dynamic Dropdowns -->
-                                        <div class="col-md-6">
-                                            <div id="unitDropdown" class="form-group" style="display: none;">
-                                                <label class="form-label fw-bold">Unit Maintenance Issues</label>
-                                                <select id="unit" class="form-select">
-                                                    <option>Flooring</option>
-                                                    <option>Walls and Ceiling</option>
-                                                    <option>Windows</option>
-                                                    <option>Doors</option>
-                                                    <option>Electrical</option>
-                                                    <option>Plumbing</option>
-                                                </select>
-                                            </div>
-
-                                            <div id="technicalDropdown" class="form-group" style="display: none;">
-                                                <label class="form-label fw-bold">Technical Issues</label>
-                                                <select id="technical" class="form-select">
-                                                    <option>Payment Error</option>
-                                                    <option>Missing Transaction</option>
-                                                    <option>Incorrect Billing Information</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <!-- Issue Description -->
-                                        <div class="col-md-12">
-                                            <label class="form-label fw-bold">Describe the issue</label>
-                                            <textarea id="maintenanceIssue" class="form-control" rows="4" required></textarea>
-                                            <div class="invalid-feedback">Please describe the issue.</div>
-                                        </div>
-
-                                        <!-- Centered Submit Button -->
-                                        <div class="text-center mt-4">
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
-                                                Submit Request
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -158,7 +171,7 @@
     <script>
         const hamBurger = document.querySelector(".toggle-btn");
         hamBurger.addEventListener("click", function () {
-        document.querySelector("#sidebar").classList.toggle("expand");
+            document.querySelector("#sidebar").classList.toggle("expand");
         });
 
         const issueTypeSelect = document.getElementById('issueType');
@@ -172,7 +185,7 @@
 
         function submitRequest() {
             const form = document.getElementById('maintenanceForm');
-            
+
             if (form.checkValidity()) {
                 alert('Maintenance request submitted successfully!');
                 form.reset();
@@ -182,7 +195,20 @@
                 form.classList.add('was-validated');
             }
         }
+
+        // Handle payment proof form submission
+        const paymentProofForm = document.getElementById('paymentProofForm');
+        paymentProofForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (paymentProofForm.checkValidity()) {
+                alert('Payment proof uploaded successfully!');
+                paymentProofForm.reset();
+            } else {
+                paymentProofForm.classList.add('was-validated');
+            }
+        });
     </script>
 
 </body>
+
 </html>

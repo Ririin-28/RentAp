@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "ucc-elect";
+$dbname = "practice";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

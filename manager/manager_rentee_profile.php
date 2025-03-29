@@ -63,7 +63,7 @@
             <!-- Print Button -->
             <div class="d-flex justify-content-end my-3">
                 <button onclick="window.print()" class="btn btn-primary">
-                    <i class="bi bi-printer"></i> Print Rentees List
+                    <i class="bi bi-printer"></i> Print List
                 </button>
             </div>
 
@@ -71,7 +71,7 @@
             <div class="content-container printable">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title"><strong>Rentees List</strong></h4>
+                        <h4 class="card-title mb-4"><strong>Rentees List</strong></h4>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -86,35 +86,35 @@
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>101</td>
+                                        <td>F-1</td>
                                         <td>John Doe</td>
                                         <td>09123456789</td>
                                         <td>john.doe@example.com</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
-                                        <td>102</td>
+                                        <td>F-2</td>
                                         <td>Jane Smith</td>
                                         <td>09876543210</td>
                                         <td>jane.smith@example.com</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
-                                        <td>103</td>
+                                        <td>F-4</td>
                                         <td>Alice Johnson</td>
                                         <td>09112233445</td>
                                         <td>alice.johnson@example.com</td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
-                                        <td>104</td>
+                                        <td>K-1</td>
                                         <td>Bob Brown</td>
                                         <td>09223344556</td>
                                         <td>bob.brown@example.com</td>
                                     </tr>
                                     <tr>
                                         <td>5</td>
-                                        <td>105</td>
+                                        <td>G-2</td>
                                         <td>Carol White</td>
                                         <td>09334455667</td>
                                         <td>carol.white@example.com</td>

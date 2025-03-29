@@ -11,7 +11,7 @@
         <li class="sidebar-item">
             <a href="rentee_unit.php" class="sidebar-link">
                 <i class="bi bi-building-gear"></i>
-                <span>Unit</span>
+                <span>Unit Management</span>
             </a>
         </li>
 

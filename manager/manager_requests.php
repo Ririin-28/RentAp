@@ -16,10 +16,10 @@
 <body>
     <div class="wrapper">
         <?php include '../manager_sidebar.php'; ?>
-        
+
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
-            
+
             <!-- Title Container -->
             <div class="title-container">
                 <img src="../images/RentAp_full.png" alt="RentAp Icon" class="rentap_Icon">
@@ -27,15 +27,12 @@
             </div>
 
             <!-- Content Container -->
-            <div class="content-container">
+                        <div class="content-container">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title"><strong>Requests List</strong></h4>
-                                <div class="card-header">
-                                    <span class="total-requests">Total Requests:<strong> 4</strong></span>
-                                </div>
+                                <h4 class="card-title mb-4"><strong>Requests List</strong></h4>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table">
@@ -50,29 +47,31 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>101</td>
+                                                    <td>F-1</td>
                                                     <td>Juan Dela Cruz</td>
                                                     <td>Mar 8</td>
                                                     <td><span class="badge bg-warning">Pending</span></td>
                                                     <td>
-                                                        <button class="btn btn-primary btn-sm view-button" onclick="openDetailsModal(event, '101', 'Electrical', 'Light Bulb', 'Bulb in living room flickering', 'Pending')">
+                                                        <button class="btn btn-primary btn-sm view-button"
+                                                            onclick="openDetailsModal(event, '101', 'Electrical', 'Light Bulb', 'Bulb in living room flickering', 'Pending')">
                                                             View
                                                         </button>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>202</td>
+                                                    <td>G-2</td>
                                                     <td>Maria Santos</td>
                                                     <td>Mar 7</td>
                                                     <td><span class="badge bg-warning">Pending</span></td>
                                                     <td>
-                                                        <button class="btn btn-primary btn-sm view-button" onclick="openDetailsModal(event, '202', 'Plumbing', 'Toilet', 'Flush not working', 'Pending')">
+                                                        <button class="btn btn-primary btn-sm view-button"
+                                                            onclick="openDetailsModal(event, '202', 'Plumbing', 'Toilet', 'Flush not working', 'Pending')">
                                                             View
                                                         </button>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>305</td>
+                                                    <td>F-4</td>
                                                     <td>Carlos Reyes</td>
                                                     <td>Mar 6</td>
                                                     <td><span class="badge bg-success">Completed</span></td>
@@ -83,12 +82,13 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>408</td>
+                                                    <td>K-1</td>
                                                     <td>Ana Mendoza</td>
                                                     <td>Mar 5</td>
                                                     <td><span class="badge bg-warning">Pending</span></td>
                                                     <td>
-                                                        <button class="btn btn-primary btn-sm view-button" onclick="openDetailsModal(event, '408', 'Walls and Ceiling', 'Ceiling', 'Water leakage', 'Pending')">
+                                                        <button class="btn btn-primary btn-sm view-button"
+                                                            onclick="openDetailsModal(event, '408', 'Walls and Ceiling', 'Ceiling', 'Water leakage', 'Pending')">
                                                             View
                                                         </button>
                                                     </td>
@@ -96,6 +96,10 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                                <!-- Moved Total Requests to the bottom -->
+                                <div class="card-footer">
+                                    <span class="total-requests">Total Requests: <strong>4</strong></span>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +157,7 @@
         hamBurger.addEventListener("click", function () {
             document.querySelector("#sidebar").classList.toggle("expand");
         });
-        
+
         let currentRow;
 
         function openDetailsModal(event, unit, category, issue, description, status) {
@@ -187,4 +191,5 @@
     </script>
 
 </body>
+
 </html>

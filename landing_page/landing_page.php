@@ -210,10 +210,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#footer">Contact</a> <!-- Links to the Footer section -->
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white px-3" href="../rentee/rentee_login.php"
-                            style="border-radius: 20px;">Login</a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -317,7 +313,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="text-white py-4" style="background-color: #333333;">
+    <footer id="footer" class="text-white py-4" style="background-color: #333333;">
         <div class="container-fluid"> 
             <div class="row">
                 <!-- Logo and Description -->

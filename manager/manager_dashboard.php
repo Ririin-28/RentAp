@@ -36,7 +36,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title"><strong>Overview</strong></h4>
+                                <h4 class="card-title mb-4"><strong>Overview</strong></h4>
                                 <div class="row">
                                     <!-- Overview Section -->
                                     <div class="content container mt-4">
@@ -45,7 +45,7 @@
                                             <div class="col-md-4 dashboardcard">
                                                 <div class="text-center p-3">
                                                     <div>
-                                                        <h5 class="card-title numbers" id="occupiedRooms">150</h5>
+                                                        <h5 class="card-title numbers" id="occupiedRooms">10</h5>
                                                         <p class="card-text cardName">Occupied Rooms</p>
                                                     </div>
                                                     <div>
@@ -59,8 +59,8 @@
                                             <div class="col-md-4 dashboardcard">
                                                 <div class="text-center p-3">
                                                     <div>
-                                                        <h5 class="card-title numbers" id="maintenanceRooms">10</h5>
-                                                        <p class="card-text cardName">Rooms Under Maintenance</p>
+                                                        <h5 class="card-title numbers" id="maintenanceRooms">4</h5>
+                                                        <p class="card-text cardName">Maintenance Requests</p>
                                                     </div>
                                                     <div>
                                                         <img src="assets/imgs/coursedbrd.png" alt="" class="img-fluid"
@@ -73,10 +73,8 @@
                                             <div class="col-md-4 dashboardcard">
                                                 <div class="text-center p-3">
                                                     <div>
-                                                        <h5 class="card-title numbers" id="totalStudents">
-                                                            <>
-                                                        </h5>
-                                                        <p class="card-text cardName">Total Late Payments</p>
+                                                        <h5 class="card-title numbers" id="totalStudents">1</h5>
+                                                        <p class="card-text cardName">Overdue Date</p>
                                                     </div>
                                                     <div>
                                                         <img src="assets/imgs/sectiondbrd.png" alt="" class="img-fluid"
@@ -102,41 +100,93 @@
                                     </div>
                                 </div>
 
+                                <!-- Divider -->
+                                <hr class="my-4">
 
-                                <!-- Upcoming Due Dates and Late Payments in One Row -->
+                                <!-- Upcoming Due Dates and Overdue Date -->
                                 <div class="row mt-4">
                                     <!-- Upcoming Due Dates -->
                                     <div class="col-md-6">
                                         <div class="card-body">
-                                            <h5 class="card-title"><strong>Upcoming Due Dates</strong></h5>
-                                            <ul class="list-group">
-                                                <li class="list-group-item">Room 101 - Due on 2025-03-15</li>
-                                                <li class="list-group-item">Room 205 - Due on 2025-03-20</li>
-                                            </ul>
+                                            <h5 class="card-title mb-4"><strong>Upcoming Due Dates</strong></h5>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Unit</th>
+                                                        <th>Due Date</th>
+                                                        <th>Days Left</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>G-1</td>
+                                                        <td>2025-03-15</td>
+                                                        <td>5 days</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>F-2</td>
+                                                        <td>2025-03-20</td>
+                                                        <td>1 day</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
 
                                     <!-- Late Payments -->
                                     <div class="col-md-6">
                                         <div class="card-body">
-                                            <h5 class="card-title"><strong>Late Payments</strong></h5>
-                                            <ul class="list-group">
-                                                <li class="list-group-item">Room 303 - Overdue by 5 days</li>
-                                                <li class="list-group-item">Room 402 - Overdue by 3 days</li>
-                                            </ul>
+                                            <h5 class="card-title mb-4"><strong>Overdue Date</strong></h5>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Unit</th>
+                                                        <th>Due Date</th>
+                                                        <th>Days Elapsed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>G-4</td>
+                                                        <td>2025-03-10</td>
+                                                        <td>5 days</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Divider -->
+                                <hr class="my-4">
+
                                 <!-- Graph Section -->
                                 <div class="col-12 mt-4">
                                     <div class="card-body">
-                                        <h5 class="card-title"><strong>Peak Rental Periods</strong></h5>
-                                        <p class="card-text">
-                                            Based on machine learning analysis, the peak rental periods are
-                                            typically during the months of May and June.
-                                        </p>
+                                        <h5 class="card-title mb-4"><strong>Peak Rental Periods</strong></h5>
                                         <div id="peakRentalChart" style="height: 300px;"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Divider -->
+                                <hr class="my-4">
+
+                                <!-- Unit Occupancy Rate and Payment Status Distribution in One Row -->
+                                <div class="row mt-4">
+                                    <!-- Unit Occupancy Rate Chart -->
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-4"><strong>Unit Occupancy Rate</strong></h5>
+                                            <div id="unitOccupancyChart" style="height: 300px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Monthly Revenue Chart -->
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-4"><strong>Monthly Revenue</strong></h5>
+                                            <div id="monthlyRevenueChart" style="height: 300px;"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -153,22 +203,81 @@
                 });
 
                 // Sample data for peak rental periods chart
-                var options = {
+                var peakRentalOptions = {
                     chart: {
                         type: 'line',
                         height: 300
                     },
                     series: [{
                         name: 'Rental Demand',
-                        data: [30, 40, 35, 50, 49, 60, 70, 91, 125, 110, 80, 60]
+                        data: [3, 4, 3, 5, 4, 6, 7, 9, 12, 11, 8, 6]
                     }],
                     xaxis: {
                         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    },
+                    yaxis: {
+                        min: 0,
+                        max: 12,
+                        tickAmount: 6, // Limit to 6 grid lines
+                        labels: {
+                            formatter: function (value) {
+                                return value.toFixed(0); // Ensure whole numbers
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Peak Rental Periods',
+                        align: 'center'
                     }
                 };
 
-                var chart = new ApexCharts(document.querySelector("#peakRentalChart"), options);
-                chart.render();
+                var peakRentalChart = new ApexCharts(document.querySelector("#peakRentalChart"), peakRentalOptions);
+                peakRentalChart.render();
+
+                // Sample data for unit occupancy rate chart
+                var unitOccupancyOptions = {
+                    chart: {
+                        type: 'pie',
+                        height: 300
+                    },
+                    series: [2, 10],
+                    labels: ['Available', 'Occupied']
+                };
+
+                var unitOccupancyChart = new ApexCharts(document.querySelector("#unitOccupancyChart"), unitOccupancyOptions);
+                unitOccupancyChart.render();
+
+                // Monthly Revenue Chart
+                var monthlyRevenueOptions = {
+                    chart: {
+                        type: 'bar',
+                        height: 300
+                    },
+                    series: [{
+                        name: 'Revenue',
+                        data: [48000, 36000, 60000, 60000, 72000, 72000, 72000, 84000, 120000, 96000, 96000, 120000]
+                    }],
+                    xaxis: {
+                        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    },
+                    yaxis: {
+                        min: 0,
+                        max: 144000, // Set the maximum value to 144,000
+                        tickAmount: 6, // Limit to 6 grid lines
+                        labels: {
+                            formatter: function (value) {
+                                return value.toLocaleString(); // Format numbers with commas
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Monthly Revenue',
+                        align: 'center'
+                    }
+                };
+
+                var monthlyRevenueChart = new ApexCharts(document.querySelector("#monthlyRevenueChart"), monthlyRevenueOptions);
+                monthlyRevenueChart.render();
             </script>
 </body>
 

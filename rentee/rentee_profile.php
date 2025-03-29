@@ -66,7 +66,7 @@
                                     <div class="col-12 col-md-4">
                                     <div class="col-12 mb-4">
                                                 <h4 class="card-title"><strong>Rentee ID</strong></h4>
-                                                <p class="card-text" id="renteeIDText">10001</p>
+                                                <p class="card-text" id="renteeIDText">F-1</p>
                                                 <input type="text" class="form-control d-none" id="renteeIDInput" value="10001">
                                             </div>
                                         <div class="row">
@@ -113,7 +113,7 @@
 
                 <!-- Payment History Section -->
                 <div class="payment-container">
-                    <h4 class="card-title"><strong>Payment History</strong></h4>
+                    <h4 class="card-title mb-4"><strong>Payment History</strong></h4>
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>

@@ -159,7 +159,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title"><strong>Apartment Layout</strong></h4>
+                                <h4 class="card-title mb-4"><strong>Apartment Layout</strong></h4>
                                 <!-- Legend -->
                                 <div class="legend d-flex justify-content-end mb-4">
                                     <div class="legend-item">
@@ -294,8 +294,10 @@
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#endLeaseModal">End Lease</button>
                             </div>
+                            <!-- Divider -->
+                            <hr class="my-4">
                             <!-- QR Code Upload Section -->
-                            <h4 class="card-title"><strong>QR Code Upload</strong></h4>
+                            <h5 class="card-title mb-4"><strong>Upload QR Code</strong></h5>
                             <div class="mb-3">
                                 <input type="file" class="form-control" id="qrCodeUpload" accept="image/*" required>
                                 <small class="form-text text-muted">Upload a QR code image for payment (e.g., PNG,
