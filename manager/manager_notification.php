@@ -26,51 +26,52 @@
             </div>
 
             <div class="card">
-            <h4 class="card-title mb-4"><strong>Notification for Payment</strong></h4>
-            <div class="table-responsive">
-                <table class="table" id="notificationTable">
-                    <thead>
-                        <tr>
-                            <th>Rentee ID</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>F-1</td>
-                            <td>John Doe</td>
-                            <td>johndoe@example.com</td>
-                            <td>2025-04-06</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td>
-                                <button class="btn btn-primary btn-sm">
-                                    <i class="bi bi-envelope"></i> Send Reminder
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>K-2</td>
-                            <td>Jane Smith</td>
-                            <td>janesmith@example.com</td>
-                            <td>2025-04-06</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td>
-                                <button class="btn btn-primary btn-sm">
-                                    <i class="bi bi-envelope"></i> Send Reminder
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Add more rows dynamically -->
-                    </tbody>
-                </table>
+                <div class="card-body">
+                    <h4 class="card-title mb-4"><strong>Notification for Payment</strong></h4>
+                    <div class="table-responsive">
+                        <table class="table" id="notificationTable">
+                            <thead>
+                                <tr>
+                                    <th>Rentee ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>F-1</td>
+                                    <td>John Doe</td>
+                                    <td>johndoe@example.com</td>
+                                    <td>2025-04-06</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="bi bi-envelope"></i> Send Reminder
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>K-2</td>
+                                    <td>Jane Smith</td>
+                                    <td>janesmith@example.com</td>
+                                    <td>2025-04-06</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="bi bi-envelope"></i> Send Reminder
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Add more rows dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
     </div>
 
