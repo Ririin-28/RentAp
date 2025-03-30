@@ -44,6 +44,14 @@
             </ul>
         </li>
 
+        
+        <li class="sidebar-item">
+            <a href="manager_notification.php" class="sidebar-link">
+                <i class="bi bi-bell"></i>
+                <span>Notification Management</span>
+            </a>
+        </li>
+
         <li class="sidebar-item">
             <a href="manager_rentee_profile.php" class="sidebar-link">
                 <i class="bi bi-person"></i>
