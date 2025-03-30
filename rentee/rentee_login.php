@@ -1,3 +1,31 @@
+<?php
+include '../db_connection.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $p_unit = $_POST['p_unit'];
+    $p_first_name = $_POST['p_first_name'];
+    $p_pin = $_POST['p_pin'];
+
+    $stmt = $conn->prepare("CALL validate_rentee_login(?, ?, ?)");
+    $stmt->bind_param("sss", $p_unit, $p_first_name, $p_pin);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        session_start();
+        $_SESSION['p_first_name'] = $p_first_name;
+        $_SESSION['p_unit'] = $p_unit;
+
+        echo json_encode(['status' => 'success', 'redirect' => '../rentee/rentee_unit.php']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid Unit, Name, or PIN.']);
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -71,44 +99,62 @@
                             <div class="col-md-7">
                                 <div class="card-body p-5">
                                     <h4 class="mb-4">Welcome Back!</h4>
-                    <p class="login-card-description mb-4">Sign in to your Rentee account</p>
-                    <form id="loginForm">
-                        <div class="mb-3">
-                        <label for="unitNumber" class="form-label">Unit Number</label>
-                            <select name="unitNumber" id="unitNumber" class="form-control" required>
-                                <option value="" disabled selected>Select your unit number</option>
-                                <?php for ($i = 101; $i <= 112; $i++): ?>
-                                    <option value="unit <?= $i ?>">unit <?= $i ?></option>
-                                <?php endfor; ?>
-                            </select>
+                                    <p class="login-card-description mb-4">Sign in to your Rentee account</p>
+                                    <form id="loginForm">
+                                        <div class="mb-3">
+                                            <label for="p_unit" class="form-label">Unit Number</label>
+                                            <select name="p_unit" id="p_unit" class="form-control" required>
+                                                <option value="" disabled selected>Select your unit number</option>
+                                                <?php
+                                                include '../db_connection.php';
+
+                                                $query = "SELECT unit FROM unit_status WHERE status = 'Occupied'";
+                                                $result = $conn->query($query);
+
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        echo "<option value='{$row['unit']}'>{$row['unit']}</option>";
+                                                    }
+                                                } else {
+                                                    echo "<option disabled>No available units</option>";
+                                                }
+
+                                                $conn->close();
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="p_first_name" class="form-label">First Name</label>
+                                            <input type="text" name="p_first_name" id="p_first_name" class="form-control" 
+                                                placeholder="Enter your first name" required>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="p_pin" class="form-label">6-Digit Pin</label>
+                                            <input type="password" name="p_pin" id="p_pin" class="form-control" 
+                                                placeholder="Enter your 6-digit pin" required maxlength="6">
+                                        </div>
+                                        <button type="submit" class="btn btn-block login-btn w-100 mb-3">Sign In</button>
+                                    </form>
+                                    <div id="loginResponse" class="mt-3"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="renteeName" class="form-label">Name</label>
-                            <input type="text" name="renteeName" id="renteeName" class="form-control" 
-                                placeholder="Enter your name" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="pin" class="form-label">6-Digit Pin</label>
-                            <input type="password" name="pin" id="pin" class="form-control" 
-                                placeholder="Enter your 6-digit pin" required maxlength="6">
-                        </div>
-                        <button type="submit" class="btn btn-block login-btn w-100 mb-3">Sign In</button>
-                    </form>
-                    <div id="loginResponse" class="mt-3"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#loginForm').submit(function(event) {
                 event.preventDefault();
+
                 const formData = {
-                    unitNumber: $('#unitNumber').val(),
-                    renteeName: $('#renteeName').val(),
-                    pin: $('#pin').val()
+                    p_unit: $('#p_unit').val(),
+                    p_first_name: $('#p_first_name').val(),
+                    p_pin: $('#p_pin').val()
                 };
 
                 $.ajax({

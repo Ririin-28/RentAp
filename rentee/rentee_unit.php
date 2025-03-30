@@ -46,7 +46,6 @@
                                     <div class="tab-pane fade show active" id="dueDateContent" role="tabpanel"
                                         aria-labelledby="dueDateTab">
                                         <div class="row gy-4">
-                                            <!-- Due Date Section -->
                                             <div class="col-lg-6">
                                                 <h5 class="fw-bold">📅 Due Date</h5>
                                                 <div class="p-3 border rounded-3 bg-light">
@@ -61,7 +60,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Online Payment Section -->
                                             <div class="col-lg-6 text-center">
                                                 <h5 class="fw-bold">💳 Online Payment</h5>
                                                 <button class="btn btn-outline-primary mt-3 p-3" data-bs-toggle="modal"
@@ -71,7 +69,6 @@
                                                 </button>
                                             </div>
 
-                                            <!-- Upload Proof of Payment -->
                                             <div class="col-12">
                                                 <h5 class="fw-bold">📤 Upload Proof of Payment</h5>
                                                 <form id="paymentProofForm" class="needs-validation" novalidate>
@@ -93,7 +90,6 @@
                                         <h5 class="fw-bold mb-4">🛠️ Request Maintenance</h5>
                                         <form id="maintenanceForm" class="needs-validation" novalidate>
                                             <div class="row gy-4">
-                                                <!-- Select Category -->
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-bold">📌 Select a Category</label>
                                                     <select id="issueType" class="form-select" required>
@@ -104,15 +100,36 @@
                                                     <div class="invalid-feedback">Please select a category.</div>
                                                 </div>
 
-                                                <!-- Describe the Issue -->
                                                 <div class="col-md-6">
+                                                    <div id="unitDropdown" class="form-group" style="display: none;">
+                                                        <label class="form-label fw-bold">Unit Maintenance Issues</label>
+                                                        <select class="form-select">
+                                                            <option>Flooring</option>
+                                                            <option>Walls and Ceiling</option>
+                                                            <option>Windows</option>
+                                                            <option>Doors</option>
+                                                            <option>Electrical</option>
+                                                            <option>Plumbing</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div id="technicalDropdown" class="form-group" style="display: none;">
+                                                        <label class="form-label fw-bold">Technical Issues</label>
+                                                        <select class="form-select">
+                                                            <option>Payment Error</option>
+                                                            <option>Missing Transaction</option>
+                                                            <option>Incorrect Billing Information</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
                                                     <label class="form-label fw-bold">✏️ Describe the Issue</label>
                                                     <textarea id="maintenanceIssue" class="form-control" rows="4"
                                                         placeholder="Provide details about the issue..." required></textarea>
                                                     <div class="invalid-feedback">Please describe the issue.</div>
                                                 </div>
 
-                                                <!-- Submit Button -->
                                                 <div class="text-end mt-4">
                                                     <button type="button" class="btn btn-primary p-3" data-bs-toggle="modal"
                                                         data-bs-target="#confirmModal">
@@ -196,7 +213,6 @@
             }
         }
 
-        // Handle payment proof form submission
         const paymentProofForm = document.getElementById('paymentProofForm');
         paymentProofForm.addEventListener('submit', function (e) {
             e.preventDefault();

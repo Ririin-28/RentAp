@@ -1,3 +1,30 @@
+<?php
+include '../db_connection.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $p_name = $_POST['p_name'];
+    $p_password = $_POST['p_password'];
+
+    $stmt = $conn->prepare("CALL validate_manager_login(?, ?)");
+    $stmt->bind_param("ss", $p_name, $p_password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+      session_start();
+      $_SESSION['m_name'] = $p_name;
+        echo json_encode(['status' => 'success', 'redirect' => '../manager/manager_dashboard.php']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid Coordinator ID or Password.']);
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,14 +100,14 @@
                                     <p class="login-card-description mb-4">Sign in to your Manager account</p>
                                     <form id="loginForm">
                                         <div class="mb-3">
-                                            <label for="rentorID" class="form-label">Username</label>
-                                            <input type="text" name="rentorID" id="rentorID" class="form-control" 
+                                            <label for="p_name" class="form-label">Username</label>
+                                            <input type="text" name="p_name" id="p_name" class="form-control" 
                                                 placeholder="Enter your username" required>
                                         </div>
                                         <div class="mb-4">
-                                            <label for="inputPassword" class="form-label">Password</label>
+                                            <label for="p_password" class="form-label">Password</label>
                                             <div class="input-group">
-                                                <input type="password" name="inputPassword" id="inputPassword" 
+                                                <input type="password" name="p_password" id="p_password" 
                                                     class="form-control" placeholder="Enter your password" required>
                                                 <button type="button" class="btn btn-outline-secondary" 
                                                     onclick="togglePasswordVisibility()">
@@ -117,7 +144,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('inputPassword');
+            const passwordInput = document.getElementById('p_password');
             const icon = document.getElementById('togglePasswordIcon');
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
@@ -130,28 +157,33 @@
             }
         }
 
-        $(document).ready(function() {
-            $('#loginForm').submit(function(event) {
-                event.preventDefault();
-                const formData = {
-                    rentorID: $('#rentorID').val(),
-                    inputPassword: $('#inputPassword').val()
-                };
 
-                // Password validation
-                const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-                if (!passwordPattern.test(formData.inputPassword)) {
-                    $('#loginResponse').html('<div class="alert alert-danger">Password does not meet the required criteria.</div>');
-                    return;
-                }
+    $(document).ready(function() {
+        $('#loginForm').submit(function(event) {
+        event.preventDefault();
+        var p_name = $('#p_name').val();
+        var p_password = $('#p_password').val();
 
-                // Simulate successful login
-                $('#loginResponse').html('<div class="alert alert-success">Login successful! Redirecting...</div>');
-                setTimeout(function() {
-                    window.location.href = 'dashboard.php';
-                }, 2000);
-            });
+        $.ajax({
+          url: '',
+          method: 'POST',
+          data: { p_name: p_name, p_password: p_password },
+          dataType: 'json',
+          success: function(response) {
+            if (response.status === 'success') {
+              window.location.href = response.redirect;
+            } else {
+              $('#loginResponse').html('<div class="alert alert-danger">' + response.message + '</div>');
+            }
+          },
+          error: function() {
+            $('#loginResponse').html('<div class="alert alert-danger">Error occurred. Please try again later.</div>');
+          }
         });
-    </script>
+      });
+    });
+
+
+  </script>
 </body>
 </html>
