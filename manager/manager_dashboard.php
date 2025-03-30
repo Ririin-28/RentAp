@@ -2,12 +2,11 @@
 session_start();
 include '../db_connection.php';
 
+// Check if the manager is logged in
 if (!isset($_SESSION['m_name'])) {
     header("Location: ../manager/manager_login.php");
-    exit;
+    exit();
 }
-
-$m_name = $_SESSION['m_name'];
 
 // Fetch data for dashboard
 // 1. Count of Occupied Rooms
@@ -118,7 +117,6 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
     $paymentStatusData[$row['status']] = (int)$row['count'];
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
