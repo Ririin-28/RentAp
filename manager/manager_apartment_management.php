@@ -1,3 +1,27 @@
+<?php
+session_start();
+include '../db_connection.php';
+
+// Handle QR Code upload
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qrCodePicture'])) {
+    $uploadDir = '../uploads/';
+    $fileName = basename($_FILES['qrCodePicture']['name']);
+    $targetFilePath = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES['qrCodePicture']['tmp_name'], $targetFilePath)) {
+        $stmt = $conn->prepare("INSERT INTO QR_Code (picture) VALUES (?)");
+        $stmt->bind_param("s", $fileName);
+        $stmt->execute();
+        $stmt->close();
+
+        $uploadMessage = "QR Code uploaded successfully!";
+    } else {
+        $uploadMessage = "Failed to upload QR Code. Please try again.";
+    }
+}
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -297,11 +321,19 @@
                             <!-- Divider -->
                             <hr class="my-4">
                             <!-- QR Code Upload Section -->
-                            <h5 class="card-title mb-4"><strong>Upload QR Code</strong></h5>
-                            <div class="mb-3">
-                                <input type="file" class="form-control" id="qrCodeUpload" accept="image/*" required>
-                                <small class="form-text text-muted">Upload a QR code image for payment (e.g., PNG,
-                                    JPG).</small>
+                            <div class="card-body p-4">
+                                <h4 class="fw-bold mb-4">QR Code Management</h4>
+                                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                    <div class="mb-3">
+                                        <label for="qrCodePicture" class="form-label">Upload QR Code</label>
+                                        <input type="file" class="form-control" name="qrCodePicture" id="qrCodePicture" accept="image/*" required>
+                                        <div class="invalid-feedback">Please upload a valid QR Code image.</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Upload QR Code</button>
+                                </form>
+                                <?php if (isset($uploadMessage)): ?>
+                                    <div class="alert alert-info mt-3"><?php echo $uploadMessage; ?></div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -482,6 +514,21 @@
                 endLeaseUnitSelect.appendChild(option);
             });
         });
+
+        // Bootstrap validation
+        (function () {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
     </script>
 </body>
 

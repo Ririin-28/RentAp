@@ -3,9 +3,10 @@ session_start();
 include '../db_connection.php';
 
 if (!isset($_SESSION['p_first_name']) || !isset($_SESSION['p_unit'])) {
-    header('Location: ../rentee_login.php');
+    header('Location: ../rentee/rentee_login.php');
     exit();
 }
+
 
 $p_first_name = $_SESSION['p_first_name'];
 $p_unit = $_SESSION['p_unit'];

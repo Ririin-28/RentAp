@@ -1,3 +1,96 @@
+<?php
+session_start();
+include '../db_connection.php';
+
+if (!isset($_SESSION['p_first_name']) || !isset($_SESSION['p_unit']) || !isset($_SESSION['rentee_id'])) {
+    header('Location: ../rentee/rentee_login.php');
+    exit();
+}
+
+$p_first_name = $_SESSION['p_first_name'];
+$p_unit = $_SESSION['p_unit'];
+$rentee_id = $_SESSION['rentee_id'];
+
+$stmt = $conn->prepare("SELECT due_date, status FROM pending_payments WHERE rentee_id = ? AND status = 'Pending' ORDER BY due_date ASC LIMIT 1");
+$stmt->bind_param("i", $rentee_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$due_date = null;
+$status = null;
+
+if ($row = $result->fetch_assoc()) {
+    $due_date = $row['due_date'];
+    $status = $row['status'];
+} else {
+    $due_date = "No pending payments";
+    $status = "N/A";
+}
+
+$stmt->close();
+
+$qrCodePicture = null;
+$qrStmt = $conn->prepare("SELECT picture FROM QR_Code ORDER BY id DESC LIMIT 1");
+$qrStmt->execute();
+$qrResult = $qrStmt->get_result();
+
+if ($qrRow = $qrResult->fetch_assoc()) {
+    $qrCodePicture = $qrRow['picture'];
+}
+
+$qrStmt->close();
+
+// Check if rentee has remaining days in Agreement_Duration
+$remainingDaysStmt = $conn->prepare("SELECT remaining_days FROM Agreement_Duration WHERE rentee_id = ? AND unit = ?");
+$remainingDaysStmt->bind_param("is", $rentee_id, $p_unit);
+$remainingDaysStmt->execute();
+$remainingDaysResult = $remainingDaysStmt->get_result();
+
+$canRequestMaintenance = false;
+if ($remainingDaysRow = $remainingDaysResult->fetch_assoc()) {
+    $canRequestMaintenance = $remainingDaysRow['remaining_days'] > 0;
+}
+$remainingDaysStmt->close();
+
+// Handle maintenance request submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['maintenanceCategory'], $_POST['maintenanceIssue'], $_POST['maintenanceDescription'])) {
+    if ($canRequestMaintenance) {
+        $category = $_POST['maintenanceCategory'];
+        $issue = $_POST['maintenanceIssue'];
+        $description = $_POST['maintenanceDescription'];
+        $requestDate = date('Y-m-d');
+
+        $maintenanceStmt = $conn->prepare("INSERT INTO Maintenance_Request (unit, rentee_id, date, category, issue, description, status) VALUES (?, ?, ?, ?, ?, ?, 'Pending')");
+        $maintenanceStmt->bind_param("sissss", $p_unit, $rentee_id, $requestDate, $category, $issue, $description);
+        $maintenanceStmt->execute();
+        $maintenanceStmt->close();
+
+        $maintenanceMessage = "Maintenance request submitted successfully!";
+    } else {
+        $maintenanceMessage = "You cannot request maintenance as your agreement has expired.";
+    }
+}
+
+$conn->close();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['paymentProof'])) {
+    $uploadDir = '../uploads/';
+    $fileName = basename($_FILES['paymentProof']['name']);
+    $targetFilePath = $uploadDir . $fileName;
+    $uploadDate = date('Y-m-d');
+
+    if (move_uploaded_file($_FILES['paymentProof']['tmp_name'], $targetFilePath)) {
+        $stmt = $conn->prepare("INSERT INTO Rentee_Payment (rentee_id, payment_picture, date) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $rentee_id, $fileName, $uploadDate);
+        $stmt->execute();
+        $stmt->close();
+
+        $confirmationMessage = "Payment proof uploaded successfully for the due date: " . date("F j, Y", strtotime($due_date));
+    } else {
+        $confirmationMessage = "Failed to upload payment proof. Please try again.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,11 +144,13 @@
                                                 <div class="p-3 border rounded-3 bg-light">
                                                     <p class="mb-2">
                                                         <strong>Monthly Rent Due Date:</strong>
-                                                        <span class="text-primary fw-bold">March 15, 2025</span>
+                                                        <span class="text-primary fw-bold">
+                                                            <?php echo $due_date !== "No pending payments" ? date("F j, Y", strtotime($due_date)) : $due_date; ?>
+                                                        </span>
                                                     </p>
                                                     <p class="mb-0">
                                                         <strong>Payment Status:</strong>
-                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                        <span class="badge bg-warning text-dark"><?php echo $status; ?></span>
                                                     </p>
                                                 </div>
                                             </div>
@@ -71,9 +166,9 @@
 
                                             <div class="col-12">
                                                 <h5 class="fw-bold">📤 Upload Proof of Payment</h5>
-                                                <form id="paymentProofForm" class="needs-validation" novalidate>
+                                                <form id="paymentProofForm" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                                                     <div class="input-group">
-                                                        <input type="file" class="form-control" id="paymentProof"
+                                                        <input type="file" class="form-control" name="paymentProof"
                                                             accept="image/*,application/pdf" required>
                                                         <button type="submit" class="btn btn-primary">
                                                             <i class="bi bi-upload"></i> Upload
@@ -88,14 +183,19 @@
                                     <div class="tab-pane fade" id="maintenanceContent" role="tabpanel"
                                         aria-labelledby="maintenanceTab">
                                         <h5 class="fw-bold mb-4">🛠️ Request Maintenance</h5>
-                                        <form id="maintenanceForm" class="needs-validation" novalidate>
+                                        <?php if (isset($maintenanceMessage)): ?>
+                                        <div class="alert alert-info text-center">
+                                            <?php echo $maintenanceMessage; ?>
+                                        </div>
+                                        <?php endif; ?>
+                                        <form id="maintenanceForm" class="needs-validation" method="POST" novalidate>
                                             <div class="row gy-4">
                                                 <div class="col-md-6">
                                                     <label class="form-label fw-bold">📌 Select a Category</label>
-                                                    <select id="issueType" class="form-select" required>
+                                                    <select id="issueType" name="maintenanceCategory" class="form-select" required>
                                                         <option value="">-- Select Category --</option>
-                                                        <option value="unit">Unit Maintenance</option>
-                                                        <option value="technical">Technical Issue</option>
+                                                        <option value="Unit Maintenance">Unit Maintenance</option>
+                                                        <option value="Technical Issue">Technical Issue</option>
                                                     </select>
                                                     <div class="invalid-feedback">Please select a category.</div>
                                                 </div>
@@ -103,29 +203,31 @@
                                                 <div class="col-md-6">
                                                     <div id="unitDropdown" class="form-group" style="display: none;">
                                                         <label class="form-label fw-bold">Unit Maintenance Issues</label>
-                                                        <select class="form-select">
-                                                            <option>Flooring</option>
-                                                            <option>Walls and Ceiling</option>
-                                                            <option>Windows</option>
-                                                            <option>Doors</option>
-                                                            <option>Electrical</option>
-                                                            <option>Plumbing</option>
+                                                        <select id="unitIssues" class="form-select">
+                                                            <option value="">-- Select Issue --</option>
+                                                            <option value="Flooring">Flooring</option>
+                                                            <option value="Walls and Ceiling">Walls and Ceiling</option>
+                                                            <option value="Windows">Windows</option>
+                                                            <option value="Doors">Doors</option>
+                                                            <option value="Electrical">Electrical</option>
+                                                            <option value="Plumbing">Plumbing</option>
                                                         </select>
                                                     </div>
 
                                                     <div id="technicalDropdown" class="form-group" style="display: none;">
                                                         <label class="form-label fw-bold">Technical Issues</label>
-                                                        <select class="form-select">
-                                                            <option>Payment Error</option>
-                                                            <option>Missing Transaction</option>
-                                                            <option>Incorrect Billing Information</option>
+                                                        <select id="technicalIssues" class="form-select">
+                                                            <option value="">-- Select Issue --</option>
+                                                            <option value="Payment Error">Payment Error</option>
+                                                            <option value="Missing Transaction">Missing Transaction</option>
+                                                            <option value="Incorrect Billing Information">Incorrect Billing Information</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-12">
                                                     <label class="form-label fw-bold">✏️ Describe the Issue</label>
-                                                    <textarea id="maintenanceIssue" class="form-control" rows="4"
+                                                    <textarea id="maintenanceDescription" name="maintenanceDescription" class="form-control" rows="4"
                                                         placeholder="Provide details about the issue..." required></textarea>
                                                     <div class="invalid-feedback">Please describe the issue.</div>
                                                 </div>
@@ -157,8 +259,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center p-4">
-                    <img src="../images/qr_code.png" alt="QR Code" class="img-fluid rounded" style="max-width: 300px;">
-                    <p class="mt-3 text-muted">Scan to make payment</p>
+                    <?php if ($qrCodePicture): ?>
+                        <img src="../uploads/<?php echo htmlspecialchars($qrCodePicture); ?>" alt="QR Code" class="img-fluid rounded" style="max-width: 300px;">
+                        <p class="mt-3 text-muted">Scan to make payment</p>
+                    <?php else: ?>
+                        <p class="text-muted">No QR Code available at the moment.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -183,47 +289,100 @@
         </div>
     </div>
 
+    <!-- Payment Confirmation Modal -->
+    <?php if (isset($confirmationMessage)): ?>
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Payment Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php echo $confirmationMessage; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        confirmationModal.show();
+    </script>
+    <?php endif; ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const hamBurger = document.querySelector(".toggle-btn");
-        hamBurger.addEventListener("click", function () {
-            document.querySelector("#sidebar").classList.toggle("expand");
-        });
+    const hamBurger = document.querySelector(".toggle-btn");
+    hamBurger.addEventListener("click", function () {
+        document.querySelector("#sidebar").classList.toggle("expand");
+    });
 
-        const issueTypeSelect = document.getElementById('issueType');
-        const unitDropdown = document.getElementById('unitDropdown');
-        const technicalDropdown = document.getElementById('technicalDropdown');
+    const issueTypeSelect = document.getElementById('issueType');
+    const unitDropdown = document.getElementById('unitDropdown');
+    const technicalDropdown = document.getElementById('technicalDropdown');
 
-        issueTypeSelect.addEventListener('change', () => {
-            unitDropdown.style.display = (issueTypeSelect.value === 'unit') ? 'block' : 'none';
-            technicalDropdown.style.display = (issueTypeSelect.value === 'technical') ? 'block' : 'none';
-        });
+    issueTypeSelect.addEventListener('change', () => {
+        unitDropdown.style.display = (issueTypeSelect.value === 'Unit Maintenance') ? 'block' : 'none';
+        technicalDropdown.style.display = (issueTypeSelect.value === 'Technical Issue') ? 'block' : 'none';
+    });
 
-        function submitRequest() {
-            const form = document.getElementById('maintenanceForm');
+    function submitRequest() {
+        const form = document.getElementById('maintenanceForm');
+        const category = document.getElementById('issueType').value;
+        const issue = category === 'Unit Maintenance'
+            ? document.getElementById('unitIssues').value
+            : document.getElementById('technicalIssues').value;
+        const description = document.getElementById('maintenanceDescription').value;
 
-            if (form.checkValidity()) {
-                alert('Maintenance request submitted successfully!');
-                form.reset();
+        if (form.checkValidity() && category && issue && description) {
+            // Set the issue value in a hidden input field
+            const hiddenIssueInput = document.createElement('input');
+            hiddenIssueInput.type = 'hidden';
+            hiddenIssueInput.name = 'maintenanceIssue';
+            hiddenIssueInput.value = issue;
+            form.appendChild(hiddenIssueInput);
+
+            // Simulate form submission via AJAX
+            const formData = new FormData(form);
+            fetch('', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                // Show maintenance message dynamically
+                const maintenanceMessage = document.createElement('div');
+                maintenanceMessage.className = 'alert alert-info text-center';
+                maintenanceMessage.textContent = 'Maintenance request submitted successfully!';
+                form.parentElement.insertBefore(maintenanceMessage, form);
+
+                // Hide the modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
                 modal.hide();
-            } else {
-                form.classList.add('was-validated');
-            }
-        }
 
-        const paymentProofForm = document.getElementById('paymentProofForm');
-        paymentProofForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            if (paymentProofForm.checkValidity()) {
-                alert('Payment proof uploaded successfully!');
-                paymentProofForm.reset();
-            } else {
-                paymentProofForm.classList.add('was-validated');
-            }
-        });
-    </script>
+                // Remove the message after 5 seconds
+                setTimeout(() => {
+                    maintenanceMessage.remove();
+                }, 5000);
+
+                // Reset the form
+                form.reset();
+                form.classList.remove('was-validated');
+                unitDropdown.style.display = 'none';
+                technicalDropdown.style.display = 'none';
+            })
+            .catch(() => {
+                alert('Failed to submit the maintenance request. Please try again.');
+            });
+        } else {
+            form.classList.add('was-validated');
+        }
+    }
+</script>
 
 </body>
 

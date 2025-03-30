@@ -12,9 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
         session_start();
         $_SESSION['p_first_name'] = $p_first_name;
         $_SESSION['p_unit'] = $p_unit;
+        $_SESSION['rentee_id'] = $row['rentee_id'];
 
         echo json_encode(['status' => 'success', 'redirect' => '../rentee/rentee_unit.php']);
     } else {
