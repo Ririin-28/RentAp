@@ -44,41 +44,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>John Doe</td>
-                                                <td>101</td>
-                                                <td>2025-01-01</td>
-                                                <td>30</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Jane Smith</td>
-                                                <td>102</td>
-                                                <td>2025-02-01</td>
-                                                <td>60</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Alice Johnson</td>
-                                                <td>103</td>
-                                                <td>2025-03-01</td>
-                                                <td>90</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Bob Brown</td>
-                                                <td>104</td>
-                                                <td>2025-04-01</td>
-                                                <td>120</td>
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>Carol White</td>
-                                                <td>105</td>
-                                                <td>2025-05-01</td>
-                                                <td>150</td>
-                                            </tr>
+                                            <?php
+                                            include '../db_connection.php';
+
+                                            $query = "SELECT ad.rentee_id, CONCAT(r.first_name, ' ', r.last_name) AS full_name, ad.unit, ad.move_in_date, ad.remaining_days
+                                                      FROM Agreement_Duration ad
+                                                      JOIN Rentee r ON ad.rentee_id = r.rentee_id";
+                                            $result = $conn->query($query);
+
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo "<tr>
+                                                            <td>{$row['rentee_id']}</td>
+                                                            <td>{$row['full_name']}</td>
+                                                            <td>{$row['unit']}</td>
+                                                            <td>{$row['move_in_date']}</td>
+                                                            <td>{$row['remaining_days']}</td>
+                                                          </tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='5' class='text-center'>No rentee data found.</td></tr>";
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -86,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 
@@ -123,7 +110,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const hamBurger = document.querySelector(".toggle-btn");
         hamBurger.addEventListener("click", function () {
@@ -132,17 +119,21 @@
 
         document.getElementById('addRenteeForm').addEventListener('submit', function(event) {
             event.preventDefault();
+
             const renteeID = document.getElementById('renteeID').value;
             const fullName = document.getElementById('fullName').value;
             const unitNumber = document.getElementById('unitNumber').value;
             const moveInDate = document.getElementById('moveInDate').value;
+
+            // Here you would typically make an AJAX call to insert the data into the database
+            // For now, we'll just simulate it by updating the UI
 
             // Calculate remaining days
             const moveInDateObj = new Date(moveInDate);
             const currentDate = new Date();
             const timeDiff = currentDate.getTime() - moveInDateObj.getTime();
             const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-            const remainingDays = 60 - daysDiff;
+            const remainingDays = 62 - daysDiff; // Assuming default is 62 days
 
             const table = document.querySelector('table tbody');
             const newRow = document.createElement('tr');

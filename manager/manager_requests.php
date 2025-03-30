@@ -1,3 +1,13 @@
+<?php
+session_start();
+include '../db_connection.php';
+
+if (!isset($_SESSION['m_name'])) {
+    header("Location: ../manager/manager_login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,7 +37,7 @@
             </div>
 
             <!-- Content Container -->
-                        <div class="content-container">
+            <div class="content-container">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -46,60 +56,43 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>F-1</td>
-                                                    <td>Juan Dela Cruz</td>
-                                                    <td>Mar 8</td>
-                                                    <td><span class="badge bg-warning">Pending</span></td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm view-button"
-                                                            onclick="openDetailsModal(event, '101', 'Electrical', 'Light Bulb', 'Bulb in living room flickering', 'Pending')">
-                                                            View
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>G-2</td>
-                                                    <td>Maria Santos</td>
-                                                    <td>Mar 7</td>
-                                                    <td><span class="badge bg-warning">Pending</span></td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm view-button"
-                                                            onclick="openDetailsModal(event, '202', 'Plumbing', 'Toilet', 'Flush not working', 'Pending')">
-                                                            View
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>F-4</td>
-                                                    <td>Carlos Reyes</td>
-                                                    <td>Mar 6</td>
-                                                    <td><span class="badge bg-success">Completed</span></td>
-                                                    <td>
-                                                        <button class="btn btn-secondary btn-sm" disabled>
-                                                            <i class="bi bi-check-circle"></i> Done
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>K-1</td>
-                                                    <td>Ana Mendoza</td>
-                                                    <td>Mar 5</td>
-                                                    <td><span class="badge bg-warning">Pending</span></td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm view-button"
-                                                            onclick="openDetailsModal(event, '408', 'Walls and Ceiling', 'Ceiling', 'Water leakage', 'Pending')">
-                                                            View
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                <?php
+                                                include '../db_connection.php';
+
+                                                $query = "SELECT mr.request_id, mr.unit, CONCAT(r.first_name, ' ', r.last_name) AS rentee_name,
+                                                                 DATE_FORMAT(mr.date, '%b %e') AS formatted_date,
+                                                                 mr.category, mr.issue, mr.description, mr.status
+                                                          FROM Maintenance_Request mr
+                                                          JOIN Rentee r ON mr.rentee_id = r.rentee_id";
+                                                $result = $conn->query($query);
+
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        $statusBadgeClass = $row['status'] === 'Pending' ? 'bg-warning' : 'bg-success';
+                                                        $actionButton = $row['status'] === 'Pending'
+                                                            ? "<button class='btn btn-primary btn-sm view-button'
+                                                                 onclick=\"openDetailsModal(event, '{$row['unit']}', '{$row['category']}', '{$row['issue']}', '{$row['description']}', '{$row['status']}')\">View</button>"
+                                                            : "<button class='btn btn-secondary btn-sm' disabled><i class='bi bi-check-circle'></i> Done</button>";
+
+                                                        echo "<tr>
+                                                                <td>{$row['unit']}</td>
+                                                                <td>{$row['rentee_name']}</td>
+                                                                <td>{$row['formatted_date']}</td>
+                                                                <td><span class='badge $statusBadgeClass'>{$row['status']}</span></td>
+                                                                <td>$actionButton</td>
+                                                              </tr>";
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='5' class='text-center'>No maintenance requests found.</td></tr>";
+                                                }
+                                                ?>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <!-- Moved Total Requests to the bottom -->
                                 <div class="card-footer">
-                                    <span class="total-requests">Total Requests: <strong>4</strong></span>
+                                    <span class="total-requests">Total Requests: <strong><?= $result->num_rows ?></strong></span>
                                 </div>
                             </div>
                         </div>
@@ -151,7 +144,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const hamBurger = document.querySelector(".toggle-btn");
         hamBurger.addEventListener("click", function () {
@@ -182,8 +175,12 @@
         }
 
         function markAsDone() {
+            const requestId = currentRow.querySelector('.view-button').getAttribute('onclick').match(/'([^']*)'/)[1];
+
             currentRow.querySelector('.badge').textContent = 'Completed';
             currentRow.querySelector('.badge').classList.replace('bg-warning', 'bg-success');
+            currentRow.querySelector('.view-button').disabled = true;
+            currentRow.querySelector('.view-button').innerHTML = '<i class="bi bi-check-circle"></i> Done';
 
             bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
             bootstrap.Modal.getInstance(document.getElementById('detailsModal')).hide();

@@ -1,3 +1,16 @@
+<?php
+session_start();
+include '../db_connection.php';
+
+if (!isset($_SESSION['m_name'])) {
+    header("Location: ../manager/manager_login.php");
+    exit();
+}
+
+$query = "SELECT rentee_id, unit, CONCAT(first_name, ' ', last_name) AS full_name, phone_number, email FROM Rentee";
+$result = $conn->query($query);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -84,41 +97,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>F-1</td>
-                                        <td>John Doe</td>
-                                        <td>09123456789</td>
-                                        <td>john.doe@example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>F-2</td>
-                                        <td>Jane Smith</td>
-                                        <td>09876543210</td>
-                                        <td>jane.smith@example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>F-4</td>
-                                        <td>Alice Johnson</td>
-                                        <td>09112233445</td>
-                                        <td>alice.johnson@example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>K-1</td>
-                                        <td>Bob Brown</td>
-                                        <td>09223344556</td>
-                                        <td>bob.brown@example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>G-2</td>
-                                        <td>Carol White</td>
-                                        <td>09334455667</td>
-                                        <td>carol.white@example.com</td>
-                                    </tr>
+                                    <?php if ($result->num_rows > 0): ?>
+                                        <?php while ($row = $result->fetch_assoc()): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($row['rentee_id']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['unit']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['full_name']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['phone_number']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                            </tr>
+                                        <?php endwhile; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="5">No rentees found.</td>
+                                        </tr>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>

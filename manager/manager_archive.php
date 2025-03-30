@@ -1,3 +1,14 @@
+<?php
+session_start();
+include '../db_connection.php';
+
+if (!isset($_SESSION['m_name'])) {
+    header("Location: ../manager/manager_login.php");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -111,86 +122,37 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>John Doe</td>
-                                        <td> G-4</td> <!-- Updated format -->
-                                        <td>09123456789</td>
-                                        <td>john.doe@example.com</td>
-                                        <td>2025-03-01</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Jane Smith</td>
-                                        <td> F-2</td> <!-- Updated format -->
-                                        <td>09876543210</td>
-                                        <td>jane.smith@example.com</td>
-                                        <td>2025-02-15</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Alice Johnson</td>
-                                        <td> F-4</td> <!-- Updated format -->
-                                        <td>09112233445</td>
-                                        <td>alice.johnson@example.com</td>
-                                        <td>2025-01-30</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Bob Brown</td>
-                                        <td> K-1</td> <!-- Updated format -->
-                                        <td>09223344556</td>
-                                        <td>bob.brown@example.com</td>
-                                        <td>2025-01-10</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Carol White</td>
-                                        <td> D-4</td> <!-- Updated format -->
-                                        <td>09334455667</td>
-                                        <td>carol.white@example.com</td>
-                                        <td>2024-12-20</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>Dave Green</td>
-                                        <td> G-1</td> <!-- Updated format -->
-                                        <td>09445566778</td>
-                                        <td>dave.green@example.com</td>
-                                        <td>2024-11-25</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>Eve Black</td>
-                                        <td> F-3</td> <!-- Updated format -->
-                                        <td>09556677889</td>
-                                        <td>eve.black@example.com</td>
-                                        <td>2024-10-15</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>Frank Blue</td>
-                                        <td> K-3</td> <!-- Updated format -->
-                                        <td>09667788990</td>
-                                        <td>frank.blue@example.com</td>
-                                        <td>2024-09-05</td>
-                                    </tr>
-                                    <tr>
-                                        <td>9</td>
-                                        <td>Grace Pink</td>
-                                        <td> D-2</td> <!-- Updated format -->
-                                        <td>09778899001</td>
-                                        <td>grace.pink@example.com</td>
-                                        <td>2024-08-20</td>
-                                    </tr>
-                                    <tr>
-                                        <td>10</td>
-                                        <td>Henry Yellow</td>
-                                        <td> G-2</td> <!-- Updated format -->
-                                        <td>09889900112</td>
-                                        <td>henry.yellow@example.com</td>
-                                        <td>2024-07-10</td>
-                                    </tr>
+                                    <?php
+                                    // Database connection
+                                    $conn = new mysqli("localhost", "root", "", "RentAp");
+
+                                    // Check connection
+                                    if ($conn->connect_error) {
+                                        die("Connection failed: " . $conn->connect_error);
+                                    }
+
+                                    // Fetch data from Rentee_Archive table
+                                    $sql = "SELECT rentee_id, CONCAT(first_name, ' ', last_name) AS full_name, unit, contact_number, email, move_out_date FROM Rentee_Archive";
+                                    $result = $conn->query($sql);
+
+                                    if ($result->num_rows > 0) {
+                                        // Output data for each row
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<tr>
+                                                    <td>{$row['rentee_id']}</td>
+                                                    <td>{$row['full_name']}</td>
+                                                    <td>{$row['unit']}</td>
+                                                    <td>{$row['contact_number']}</td>
+                                                    <td>{$row['email']}</td>
+                                                    <td>{$row['move_out_date']}</td>
+                                                  </tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='6' class='text-center'>No records found</td></tr>";
+                                    }
+
+                                    $conn->close();
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
