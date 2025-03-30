@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2025 at 04:06 PM
+-- Generation Time: Mar 30, 2025 at 09:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -137,10 +137,10 @@ CREATE TABLE `agreement_duration` (
 INSERT INTO `agreement_duration` (`unit`, `rentee_id`, `move_in_date`, `remaining_days`) VALUES
 ('F-1', 1, '2024-11-10', 0),
 ('F-2', 2, '2024-12-18', 0),
-('F-3', 3, '2025-03-30', 60),
-('G-3', 9, '2025-03-07', 37),
-('G-4', 8, '2025-02-26', 28),
-('K-1', 4, '2025-02-25', 27),
+('F-3', 3, '2025-03-30', 59),
+('G-3', 9, '2025-03-07', 36),
+('G-4', 8, '2025-02-26', 27),
+('K-1', 4, '2025-02-25', 26),
 ('K-2', 5, '2024-12-20', 0),
 ('K-3', 6, '2025-01-15', 0),
 ('K-4', 7, '2024-12-04', 0);
@@ -161,6 +161,13 @@ CREATE TABLE `maintenance_request` (
   `description` text DEFAULT NULL,
   `status` enum('Pending','Resolved') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `maintenance_request`
+--
+
+INSERT INTO `maintenance_request` (`request_id`, `unit`, `rentee_id`, `date`, `category`, `issue`, `description`, `status`) VALUES
+(1, 'F-3', 3, '2025-03-30', 'Unit Maintenance', 'Plumbing', 'The bathroom sink has a leak.', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -192,6 +199,36 @@ CREATE TABLE `payment_history` (
   `amount` decimal(10,2) DEFAULT NULL,
   `status` enum('Paid','Overdue') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_history`
+--
+
+INSERT INTO `payment_history` (`rentee_id`, `date`, `amount`, `status`) VALUES
+(1, '2024-12-10', 12000.00, 'Paid'),
+(1, '2025-01-10', 12000.00, 'Paid'),
+(1, '2025-02-10', 12000.00, 'Paid'),
+(1, '2025-03-10', 12000.00, 'Paid'),
+(2, '2025-01-18', 12000.00, 'Paid'),
+(2, '2025-02-18', 12000.00, 'Paid'),
+(2, '2025-03-18', 12000.00, 'Paid'),
+(3, '2025-03-30', 12000.00, 'Paid'),
+(9, '2025-03-07', 12000.00, 'Paid'),
+(8, '2025-02-26', 12000.00, 'Paid'),
+(8, '2025-03-26', 12000.00, 'Paid'),
+(4, '2025-02-25', 12000.00, 'Paid'),
+(4, '2025-03-25', 12000.00, 'Paid'),
+(5, '2025-01-20', 12000.00, 'Paid'),
+(5, '2024-12-20', 12000.00, 'Paid'),
+(5, '2025-02-20', 12000.00, 'Paid'),
+(5, '2025-03-20', 12000.00, 'Paid'),
+(6, '2024-12-15', 12000.00, 'Paid'),
+(6, '2025-02-15', 12000.00, 'Paid'),
+(6, '2025-03-15', 12000.00, 'Paid'),
+(7, '2024-12-04', 12000.00, 'Paid'),
+(7, '2025-01-04', 12000.00, 'Paid'),
+(7, '2025-02-04', 12000.00, 'Paid'),
+(7, '2025-03-04', 12000.00, 'Paid');
 
 -- --------------------------------------------------------
 
@@ -231,6 +268,13 @@ CREATE TABLE `qr_code` (
   `id` int(11) NOT NULL,
   `picture` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `qr_code`
+--
+
+INSERT INTO `qr_code` (`id`, `picture`) VALUES
+(1, 'rentap_qrcode.jpg');
 
 -- --------------------------------------------------------
 
@@ -427,13 +471,13 @@ ALTER TABLE `unit_status`
 -- AUTO_INCREMENT for table `maintenance_request`
 --
 ALTER TABLE `maintenance_request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `qr_code`
 --
 ALTER TABLE `qr_code`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `rentee`
