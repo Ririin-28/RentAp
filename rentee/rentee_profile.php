@@ -157,7 +157,7 @@ $conn->close();
                     <?php while ($payment = $payments->fetch_assoc()): ?>
                         <tr>
                             <td><?= htmlspecialchars($payment['date']) ?></td>
-                            <td>$<?= htmlspecialchars($payment['amount']) ?></td>
+                            <td>₱<?= htmlspecialchars($payment['amount']) ?></td>
                             <td>
                                 <span class="badge <?= $payment['status'] === 'Paid' ? 'bg-success' : 'bg-warning text-dark' ?>">
                                     <?= htmlspecialchars($payment['status']) ?>
