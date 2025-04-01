@@ -147,6 +147,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </main>
 
+    <a href="../manager/manager_login.php" class="btn btn-dark position-fixed" 
+       style="bottom: 20px; right: 20px; border-radius: 50%; width: 50px; height: 50px; display: flex; 
+       justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        <i class="bi bi-person-circle" style="font-size: 20px;"></i>
+    </a>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
