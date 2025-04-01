@@ -11,12 +11,19 @@ if (!isset($_SESSION['p_first_name']) || !isset($_SESSION['p_unit'])) {
 $p_first_name = $_SESSION['p_first_name'];
 $p_unit = $_SESSION['p_unit'];
 
-$query = "SELECT * FROM rentee WHERE first_name = ? AND unit = ?";
+$query = "SELECT * FROM Rentee WHERE first_name = ? AND (unit = ? OR unit IS NULL)";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("ss", $p_first_name, $p_unit);
 $stmt->execute();
 $result = $stmt->get_result();
 $rentee = $result->fetch_assoc();
+
+if (!$rentee) {
+    // Handle case where no matching rentee is found
+    echo "No matching rentee found.";
+    exit();
+}
+
 $stmt->close();
 
 $payment_query = "SELECT date, amount, status FROM payment_history WHERE rentee_id = ?";

@@ -202,13 +202,13 @@
                         <a class="nav-link" href="#features">Features</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#location">Location</a> <!-- Links to the Location section -->
+                        <a class="nav-link" href="#location">Location</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#about">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#footer">Contact</a> <!-- Links to the Footer section -->
+                        <a class="nav-link" href="#footer">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -345,7 +345,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([14.723024323409765, 121.03681689362779], 14); // Coordinates for Quezon City
+        var map = L.map('map').setView([14.723024323409765, 121.03681689362779], 14);
 
         // Add OpenStreetMap tiles
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

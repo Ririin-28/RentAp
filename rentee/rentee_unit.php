@@ -71,8 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['maintenanceCategory']
     }
 }
 
-$conn->close();
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['paymentProof'])) {
     $uploadDir = '../uploads/';
     $fileName = basename($_FILES['paymentProof']['name']);
@@ -86,10 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['paymentProof'])) {
         $stmt->close();
 
         $confirmationMessage = "Payment proof uploaded successfully for the due date: " . date("F j, Y", strtotime($due_date));
+        $uploadSuccess = true;
     } else {
         $confirmationMessage = "Failed to upload payment proof. Please try again.";
+        $uploadSuccess = false;
     }
 }
+
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -289,6 +291,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['paymentProof'])) {
         </div>
     </div>
 
+    <!-- Payment Upload Notification Modal -->
+    <div class="modal fade" id="uploadNotificationModal" tabindex="-1" aria-labelledby="uploadNotificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadNotificationModalLabel">Payment Upload Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php if (isset($confirmationMessage)): ?>
+                        <?php echo $confirmationMessage; ?>
+                    <?php endif; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Payment Confirmation Modal -->
     <?php if (isset($confirmationMessage)): ?>
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
@@ -382,6 +404,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['paymentProof'])) {
             form.classList.add('was-validated');
         }
     }
+</script>
+
+<script>
+    <?php if (isset($uploadSuccess)): ?>
+        const uploadNotificationModal = new bootstrap.Modal(document.getElementById('uploadNotificationModal'));
+        uploadNotificationModal.show();
+    <?php endif; ?>
 </script>
 
 </body>

@@ -19,11 +19,21 @@
         <?php
         include '../db_connection.php';
 
+        // Query for pending payments
         $query = "SELECT R.rentee_id, CONCAT(R.first_name, ' ', R.last_name) AS full_name, R.email, P.due_date, P.status 
                   FROM Rentee R 
                   JOIN Pending_Payments P ON R.rentee_id = P.rentee_id 
                   WHERE P.status = 'Pending'";
         $result = $conn->query($query);
+
+        // Query for rentee payments
+        $paymentsQuery = "
+            SELECT RP.rentee_id, CONCAT(R.first_name, ' ', R.last_name) AS full_name, RP.payment_picture, RP.date AS payment_date, P.due_date
+            FROM rentee_payment RP
+            JOIN Rentee R ON RP.rentee_id = R.rentee_id
+            JOIN Pending_Payments P ON RP.rentee_id = P.rentee_id
+        ";
+        $paymentsResult = $conn->query($paymentsQuery);
         ?>
         <!-- Main Content -->
         <div class="main-content container-fluid g-0">
@@ -33,6 +43,7 @@
                 <h1>Notification Management</h1>
             </div>
 
+            <!-- Notification for Payment Section -->
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-4"><strong>Notification for Payment</strong></h4>
@@ -78,18 +89,137 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Rentee Payments Section -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title mb-4"><strong>Rentee Payments</strong></h4>
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-sm" id="renteePaymentsTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">Rentee ID</th>
+                                    <th style="width: 20%;">Full Name</th>
+                                    <th style="width: 20%;">Payment Picture</th>
+                                    <th style="width: 15%;">Payment Date</th>
+                                    <th style="width: 15%;">Due Date</th>
+                                    <th style="width: 20%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $paymentsResult->fetch_assoc()) { ?>
+                                    <tr>
+                                        <td><?php echo $row['rentee_id']; ?></td>
+                                        <td><?php echo $row['full_name']; ?></td>
+                                        <td>
+                                            <a href="#" class="view-picture" data-picture="../uploads/<?php echo $row['payment_picture']; ?>">
+                                                <?php echo $row['payment_picture']; ?>
+                                            </a>
+                                        </td>
+                                        <td><?php echo $row['payment_date']; ?></td>
+                                        <td><?php echo $row['due_date']; ?></td>
+                                        <td>
+                                            <form class="send-receipt-form d-inline">
+                                                <input type="hidden" name="rentee_id" value="<?php echo $row['rentee_id']; ?>">
+                                                <input type="hidden" name="date" value="<?php echo $row['payment_date']; ?>">
+                                                <button type="button" class="btn btn-secondary btn-sm send-receipt-btn">Send Receipt</button>
+                                            </form>
+                                            <form class="mark-as-paid-form d-inline">
+                                                <input type="hidden" name="rentee_id" value="<?php echo $row['rentee_id']; ?>">
+                                                <input type="hidden" name="due_date" value="<?php echo $row['due_date']; ?>">
+                                                <button type="button" class="btn btn-success btn-sm mark-as-paid-btn">Mark as Paid</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Picture -->
+    <div class="modal fade" id="pictureModal" tabindex="-1" aria-labelledby="pictureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pictureModalLabel">Payment Picture</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalPicture" src="" alt="Payment Picture" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Response Modal -->
+    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="responseModalLabel">
+                        <i class="bi bi-info-circle"></i> Notification
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="responseMessage" class="fs-5"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
     <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="responseModalLabel">Notification</h5>
+                <!-- Modal Header -->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="responseModalLabel">
+                        <i class="bi bi-info-circle"></i> Notification
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="responseMessage">
 
+                <!-- Modal Body -->
+                <div class="modal-body text-center">
+                    <div id="responseMessage" class="fs-5"></div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmMarkAsPaidModal" tabindex="-1" aria-labelledby="confirmMarkAsPaidLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title" id="confirmMarkAsPaidLabel">
+                        <i class="bi bi-exclamation-circle"></i> Confirm Action
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    Are you sure you want to mark this payment as paid?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmMarkAsPaidBtn" class="btn btn-success">Yes, Mark as Paid</button>
                 </div>
             </div>
         </div>
@@ -102,6 +232,19 @@
             document.querySelector("#sidebar").classList.toggle("expand");
         });
 
+        // View picture in modal
+        document.querySelectorAll('.view-picture').forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                const pictureSrc = this.getAttribute('data-picture');
+                const modalPicture = document.getElementById('modalPicture');
+                modalPicture.src = pictureSrc;
+
+                const pictureModal = new bootstrap.Modal(document.getElementById('pictureModal'));
+                pictureModal.show();
+            });
+        });
+
         // Individual reminder
         document.querySelectorAll('.send-reminder-btn').forEach(button => {
             button.addEventListener('click', function (event) {
@@ -110,6 +253,11 @@
                 const form = this.closest('.send-reminder-form');
                 const formData = new FormData(form);
 
+                // Disable the button and show a loading spinner
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+                this.disabled = true;
+
                 fetch('send_notifications.php', {
                     method: 'POST',
                     body: formData
@@ -117,22 +265,30 @@
                 .then(response => response.json())
                 .then(data => {
                     const modal = new bootstrap.Modal(document.getElementById('responseModal'));
-                    document.getElementById('responseMessage').textContent = data.message;
+                    const modalMessage = document.getElementById('responseMessage');
 
-                    const notification = document.createElement('div');
-                    notification.className = 'alert alert-success';
-                    notification.textContent = 'Email sent successfully!';
-                    document.body.appendChild(notification);
+                    if (data.success) {
+                        modalMessage.textContent = data.message;
+                        modalMessage.className = 'text-success';
+                    } else {
+                        modalMessage.textContent = data.message;
+                        modalMessage.className = 'text-danger';
+                    }
 
                     modal.show();
-
-                    setTimeout(() => {
-                        modal.hide();
-                        notification.remove(); 
-                    }, 3000);
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+                    const modalMessage = document.getElementById('responseMessage');
+                    modalMessage.textContent = 'An error occurred while sending the reminder.';
+                    modalMessage.className = 'text-danger';
+                    modal.show();
+                })
+                .finally(() => {
+                    // Re-enable the button and restore its original text
+                    this.innerHTML = originalText;
+                    this.disabled = false;
                 });
             });
         });
@@ -142,6 +298,11 @@
             const form = document.getElementById('bulk-reminder-form');
             const formData = new FormData(form);
 
+            // Disable the button and show a loading spinner
+            const originalText = this.innerHTML;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+            this.disabled = true;
+
             fetch('send_notifications_bulk.php', {
                 method: 'POST',
                 body: formData
@@ -149,29 +310,142 @@
             .then(response => response.json())
             .then(data => {
                 const modal = new bootstrap.Modal(document.getElementById('responseModal'));
-                document.getElementById('responseMessage').textContent = data.message;
+                const modalMessage = document.getElementById('responseMessage');
 
-                const notification = document.createElement('div');
-                notification.className = 'alert alert-success';
-                notification.textContent = 'Email sent successfully!';
-                document.body.appendChild(notification);
+                if (data.success) {
+                    modalMessage.textContent = data.message;
+                    modalMessage.className = 'text-success';
+                } else {
+                    modalMessage.textContent = data.message;
+                    modalMessage.className = 'text-danger';
+                }
 
                 modal.show();
-
-                setTimeout(() => {
-                    modal.hide();
-                    notification.remove();
-                }, 3000);
             })
             .catch(error => {
                 console.error('Error:', error);
+                const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+                const modalMessage = document.getElementById('responseMessage');
+                modalMessage.textContent = 'An error occurred while sending the bulk reminders.';
+                modalMessage.className = 'text-danger';
+                modal.show();
+            })
+            .finally(() => {
+                // Re-enable the button and restore its original text
+                this.innerHTML = originalText;
+                this.disabled = false;
             });
         });
 
-        // Select all checkboxes
-        document.getElementById('selectAll').addEventListener('change', function () {
-            const checkboxes = document.querySelectorAll('.select-row');
-            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        // Send receipt
+        document.querySelectorAll('.send-receipt-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const form = this.closest('.send-receipt-form');
+                const formData = new FormData(form);
+
+                // Disable the button and show a loading spinner
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+                this.disabled = true;
+
+                fetch('send_receipt.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+                    const modalMessage = document.getElementById('responseMessage');
+
+                    if (data.success) {
+                        modalMessage.textContent = data.message;
+                        modalMessage.className = 'text-success';
+                    } else {
+                        modalMessage.textContent = data.message;
+                        modalMessage.className = 'text-danger';
+                    }
+
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+                    const modalMessage = document.getElementById('responseMessage');
+                    modalMessage.textContent = 'An error occurred while sending the receipt.';
+                    modalMessage.className = 'text-danger';
+                    modal.show();
+                })
+                .finally(() => {
+                    // Re-enable the button and restore its original text
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                });
+            });
+        });
+
+        let selectedMarkAsPaidForm = null;
+
+        // Handle "Mark as Paid" button click
+        document.querySelectorAll('.mark-as-paid-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedMarkAsPaidForm = this.closest('.mark-as-paid-form');
+                const confirmModal = new bootstrap.Modal(document.getElementById('confirmMarkAsPaidModal'));
+                confirmModal.show();
+            });
+        });
+
+        // Handle confirmation in the modal
+        document.getElementById('confirmMarkAsPaidBtn').addEventListener('click', function () {
+            if (!selectedMarkAsPaidForm) return;
+
+            const formData = new FormData(selectedMarkAsPaidForm);
+
+            // Disable the button and show a loading spinner
+            const originalText = this.innerHTML;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            this.disabled = true;
+
+            // Hide the confirmation modal
+            const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmMarkAsPaidModal'));
+            confirmModal.hide();
+
+            fetch('mark_as_paid.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
+                const modalMessage = document.getElementById('responseMessage');
+
+                if (data.success) {
+                    modalMessage.textContent = data.message;
+                    modalMessage.className = 'text-success';
+
+                    // Optionally, remove the row from the table
+                    selectedMarkAsPaidForm.closest('tr').remove();
+                } else {
+                    modalMessage.textContent = data.message;
+                    modalMessage.className = 'text-danger';
+                }
+
+                responseModal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
+                const modalMessage = document.getElementById('responseMessage');
+                modalMessage.textContent = 'An error occurred while marking the payment as paid.';
+                modalMessage.className = 'text-danger';
+                responseModal.show();
+            })
+            .finally(() => {
+                // Re-enable the button and restore its original text
+                this.innerHTML = originalText;
+                this.disabled = false;
+            });
         });
     </script>
 </body>

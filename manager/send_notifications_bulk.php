@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('rentapnotifier@gmail.com', 'RentAp Notifier');
+            $mail->setFrom('rentapnotifier@gmail.com', 'RentAp');
             $mail->addAddress($email);
             $mail->Subject = $subject;
             $mail->Body = $message;
