@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2025 at 09:00 PM
+-- Generation Time: Apr 01, 2025 at 06:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -298,9 +298,9 @@ CREATE TABLE `rentee` (
 --
 
 INSERT INTO `rentee` (`rentee_id`, `unit`, `first_name`, `last_name`, `facebook_profile`, `email`, `phone_number`, `pin`) VALUES
-(1, 'F-1', 'Merlyn', 'Cuanco', 'merlyn_cuanco', 'merlyncuanco@gmail.com', '09976481187', '000000'),
-(2, 'F-2', 'Carmelita', 'Ronzales', 'carmelita_ronzales', 'carmelita_ronzales12@gmail.com', '09188078126', '101010'),
-(3, 'F-3', 'Rosalyn', 'Gomez', 'rosalyn_gomez', 'rosalyn_gomez23@gmail.co', '09456338756', '222222'),
+(1, 'F-1', 'Riana', 'Nadura', 'riana.nadura', 'riananadura1@gmail.com', '09167794168', '000000'),
+(2, 'F-2', 'Carmelita', 'Ronzales', 'carmelita_ronzales', 'farachann06@gmail.com', '09188078126', '101010'),
+(3, 'F-3', 'Rosalyn', 'Gomez', 'rosalyn_gomez', 'eduardgomez564@gmail.com', '09456338756', '222222'),
 (4, 'K-1', 'Karen', 'Santos', 'k_santos', 'karen_santos@gmail.com', '09205482875', '218222'),
 (5, 'K-2', 'Ruel', 'Rapio', 'ruel_rapio', 'ruel_rapio@gmail.com', '09270024012', '121212'),
 (6, 'K-3', 'Elaine', 'Tan', 'elaine_tan', 'elaine_tan@gmail.com', '09399079313', '079313'),
