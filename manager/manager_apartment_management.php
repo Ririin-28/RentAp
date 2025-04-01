@@ -9,19 +9,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qrCodePicture'])) {
     $targetFilePath = $uploadDir . $fileName;
 
     if (move_uploaded_file($_FILES['qrCodePicture']['tmp_name'], $targetFilePath)) {
-        $stmt = $conn->prepare("INSERT INTO QR_Code (picture) VALUES (?)");
+        $stmt = $conn->prepare("INSERT INTO qr_code (picture) VALUES (?)");
         $stmt->bind_param("s", $fileName);
         $stmt->execute();
         $stmt->close();
 
-        $uploadMessage = "QR Code uploaded successfully!";
+        $_SESSION['upload_message'] = "QR Code uploaded successfully!";
     } else {
-        $uploadMessage = "Failed to upload QR Code. Please try again.";
+        $_SESSION['upload_message'] = "Failed to upload QR Code. Please try again.";
     }
+    header("Location: apartment_management.php");
+    exit();
 }
 
-$conn->close();
+// Display messages
+$uploadMessage = $_SESSION['upload_message'] ?? '';
+$successMessage = $_SESSION['success_message'] ?? '';
+$errorMessage = $_SESSION['error_message'] ?? '';
+
+// Clear messages after displaying
+unset($_SESSION['upload_message']);
+unset($_SESSION['success_message']);
+unset($_SESSION['error_message']);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,134 +47,175 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../main.css">
     <style>
-        .unit {
-            border: 2px solid #ddd;
-            padding: 10px;
-            margin: 10px;
-            height: 110px;
-            border-radius: 8px;
-            text-align: center;
-            transition: transform 0.2s;
-            position: relative;
+        .apartment-layout {
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            font-size: 1.1rem;
         }
 
-        .unit:hover {
-            transform: scale(1.05);
+        .unit-grid-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .occupied {
-            background-color: #fff3cd;
+        .unit-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
         }
 
-        .available {
-            background-color: #d4edda;
+        .unit-card {
+            flex: 1;
+            min-width: 220px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid transparent;
+            cursor: pointer;
         }
 
-        .maintenance {
-            background-color: #f8d7da;
+        .unit-card.available {
+            border-top-color: #2e7d32;
         }
 
-        .unit h5 {
+        .unit-card.occupied {
+            border-top-color: #ff8f00;
+        }
+
+        .unit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .unit-name {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #333;
+        }
+
+        .unit-status-badge {
+            font-size: 1rem;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .unit-card.available .unit-status-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .unit-card.occupied .unit-status-badge {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .unit-body {
+            flex-grow: 1;
+        }
+
+        .unit-info {
+            font-size: 1.1rem;
+            color: #555;
             margin-bottom: 10px;
+            display: flex;
+            gap: 8px;
+            line-height: 1.5;
         }
 
-        .unit p {
-            margin: 0;
+        .info-label {
+            font-weight: 600;
+            color: #333;
+            min-width: 80px;
         }
 
-        .warning-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            color: #ffc107;
-            cursor: pointer;
+        .vacant-text {
+            font-size: 1.1rem;
+            color: #666;
+            font-style: italic;
         }
 
-        .warning-tooltip-text {
-            display: none;
-            position: absolute;
-            top: 30px;
-            right: 10px;
-            background-color: #ffc107;
-            color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .warning-icon:hover+.warning-tooltip-text {
-            display: block;
-        }
-
-        .danger-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            color: rgb(252, 0, 0);
-            cursor: pointer;
-        }
-
-        .danger-tooltip-text {
-            display: none;
-            position: absolute;
-            top: 30px;
-            right: 10px;
-            background-color: rgb(255, 0, 0);
-            color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .danger-icon:hover+.danger-tooltip-text {
-            display: block;
+        .unit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
         }
 
         .legend {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
+            justify-content: flex-end;
+            gap: 25px;
+            margin-bottom: 25px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
+            gap: 10px;
         }
 
         .legend-color {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+            width: 22px;
+            height: 22px;
             border-radius: 5px;
+        }
+
+        .legend-color.available {
+            background: #2e7d32;
+        }
+
+        .legend-color.occupied {
+            background: #ff8f00;
         }
 
         .legend-text {
-            font-size: 14px;
+            font-size: 1.1rem;
             color: #555;
+            font-weight: 500;
         }
 
-        .view-button {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+        @media (max-width: 992px) {
+            .unit-row {
+                flex-wrap: wrap;
+            }
+
+            .unit-card {
+                min-width: calc(50% - 15px);
+            }
         }
 
-        .occupant-name {
-            display: none;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-        }
+        @media (max-width: 576px) {
+            .apartment-layout {
+                font-size: 1rem;
+                padding: 15px;
+            }
 
-        .unit.occupied:hover .occupant-name {
-            display: block;
+            .unit-card {
+                min-width: 100%;
+                padding: 15px;
+            }
+
+            .unit-name {
+                font-size: 1.2rem;
+            }
+
+            .unit-info {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -183,353 +235,315 @@ $conn->close();
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
+                                <?php if ($successMessage): ?>
+                                    <div class="alert alert-success"><?php echo $successMessage; ?></div>
+                                <?php endif; ?>
+                                <?php if ($errorMessage): ?>
+                                    <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+                                <?php endif; ?>
+                                
                                 <h4 class="card-title mb-4"><strong>Apartment Layout</strong></h4>
                                 <!-- Legend -->
-                                <div class="legend d-flex justify-content-end mb-4">
+                                <div class="legend">
                                     <div class="legend-item">
-                                        <div class="legend-color" style="background-color: #d4edda;"></div>
+                                        <div class="legend-color available"></div>
                                         <div class="legend-text">Available</div>
                                     </div>
                                     <div class="legend-item">
-                                        <div class="legend-color" style="background-color: #fff3cd;"></div>
+                                        <div class="legend-color occupied"></div>
                                         <div class="legend-text">Occupied</div>
                                     </div>
                                 </div>
 
-                                <!-- Rentee Grid View -->
-                                <div class="row mb-4">
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 112">
-                                            <h5>Unit G-4</h5>
-                                            <div class="occupant-name">John Doe</div>
-                                            <i class="bi bi-exclamation-triangle-fill danger-icon"></i>
-                                            <div class="danger-tooltip-text">Overdue Date</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'John Doe', 'john.doe', 'john.doe@example.com', '1234567890')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 111">
-                                            <h5>Unit G-3</h5>
-                                            <div class="occupant-name">Jane Smith</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Jane Smith', 'jane.smith', 'jane.smith@example.com', '0987654321')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit available" data-unit="Unit 110">
-                                            <h5>Unit G-2</h5>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Available', '', '', '', '')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 109">
-                                            <h5>Unit G-1</h5>
-                                            <div class="occupant-name">Alice Johnson</div>
-                                            <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="warning-tooltip-text">Upcoming Due Date</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Alice Johnson', 'alice.johnson', 'alice.johnson@example.com', '1122334455')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 108">
-                                            <h5>Unit K-4</h5>
-                                            <div class="occupant-name">Bob Brown</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Bob Brown', 'bob.brown', 'bob.brown@example.com', '2233445566')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 107">
-                                            <h5>Unit K-3</h5>
-                                            <div class="occupant-name">Carol White</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Carol White', 'carol.white', 'carol.white@example.com', '3344556677')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 106">
-                                            <h5>Unit K-2</h5>
-                                            <div class="occupant-name">Dave Green</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Dave Green', 'dave.green', 'dave.green@example.com', '4455667788')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 105">
-                                            <h5>Unit K-1</h5>
-                                            <div class="occupant-name">Eve Black</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Eve Black', 'eve.black', 'eve.black@example.com', '5566778899')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 104">
-                                            <h5>Unit F-4</h5>
-                                            <div class="occupant-name">Eve Black</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Eve Black', 'eve.black', 'eve.black@example.com', '5566778899')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 103">
-                                            <h5>Unit F-3</h5>
-                                            <div class="occupant-name">Frank Blue</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Frank Blue', 'frank.blue', 'frank.blue@example.com', '6677889900')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit occupied" data-unit="Unit 102">
-                                            <h5>Unit F-2</h5>
-                                            <div class="occupant-name">Grace Pink</div>
-                                            <i class="bi bi-exclamation-triangle-fill warning-icon"></i>
-                                            <div class="warning-tooltip-text">Upcoming Due Date</div>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Occupied', 'Grace Pink', 'grace.pink', 'grace.pink@example.com', '7788990011')">View</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="unit available" data-unit="Unit 101">
-                                            <h5>Unit F-1</h5>
-                                            <button type="button" class="btn btn-primary view-button"
-                                                data-bs-toggle="modal" data-bs-target="#viewModal"
-                                                onclick="fillModal('Available', '', '', '', '')">View</button>
-                                        </div>
+                                <!-- Apartment Layout -->
+                                <div class="apartment-layout">
+                                    <?php
+                                    // Fetch unit data with rentee information
+                                    $query = "SELECT us.unit, us.status, 
+                                             CONCAT(r.first_name, ' ', r.last_name) AS rentee_full_name,
+                                             r.facebook_profile, r.email, r.phone_number,
+                                             ad.move_in_date
+                                      FROM unit_status us
+                                      LEFT JOIN rentee r ON us.unit = r.unit
+                                      LEFT JOIN agreement_duration ad ON r.rentee_id = ad.rentee_id AND us.unit = ad.unit";
+                                    $result = $conn->query($query);
+                                    $units = [];
+                                    while ($row = $result->fetch_assoc()) {
+                                        $units[$row['unit']] = $row;
+                                    }
+
+                                    // Define the unit arrangement
+                                    $unitGroups = [
+                                        ['G-4', 'G-3', 'G-2', 'G-1'],
+                                        ['K-4', 'K-3', 'K-2', 'K-1'],
+                                        ['F-4', 'F-3', 'F-2', 'F-1']
+                                    ];
+                                    ?>
+
+                                    <div class="unit-grid-container">
+                                        <?php foreach ($unitGroups as $group): ?>
+                                            <div class="unit-row">
+                                                <?php foreach ($group as $unit):
+                                                    $unitData = $units[$unit] ?? null;
+                                                    $status = $unitData['status'] ?? 'Available';
+                                                    $statusClass = strtolower($status);
+                                                    ?>
+                                                    <div class="unit-card <?php echo $statusClass; ?>" data-bs-toggle="modal" data-bs-target="#viewModal" 
+                                                        data-unit="<?php echo $unit; ?>"
+                                                        data-status="<?php echo $status; ?>"
+                                                        data-rentee="<?php echo htmlspecialchars($unitData['rentee_full_name'] ?? 'Vacant'); ?>"
+                                                        data-facebook="<?php echo htmlspecialchars($unitData['facebook_profile'] ?? ''); ?>"
+                                                        data-email="<?php echo htmlspecialchars($unitData['email'] ?? ''); ?>"
+                                                        data-phone="<?php echo htmlspecialchars($unitData['phone_number'] ?? ''); ?>"
+                                                        data-movein="<?php echo htmlspecialchars($unitData['move_in_date'] ?? ''); ?>">
+                                                        <div class="unit-header">
+                                                            <span class="unit-name"><?php echo $unit; ?></span>
+                                                            <span class="unit-status-badge"><?php echo $status; ?></span>
+                                                        </div>
+                                                        <div class="unit-body">
+                                                            <?php if ($unitData && $unitData['rentee_full_name']): ?>
+                                                                <div class="unit-info">
+                                                                    <span class="info-label">Rentee:</span>
+                                                                    <span><?php echo htmlspecialchars($unitData['rentee_full_name']); ?></span>
+                                                                </div>
+                                                                <div class="unit-info">
+                                                                    <span class="info-label">Move-in:</span>
+                                                                    <span><?php echo htmlspecialchars($unitData['move_in_date']); ?></span>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <div class="unit-info">
+                                                                    <span class="vacant-text">Vacant Unit</span>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
-                                <!-- Add Rentee Button -->
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#addRenteeModal">Add Rentee</button>
-                                <!-- End Lease Button -->
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#endLeaseModal">End Lease</button>
-                            </div>
-                            <!-- Divider -->
-                            <hr class="my-4">
-                            <!-- QR Code Upload Section -->
-                            <div class="card-body p-4">
-                                <h4 class="fw-bold mb-4">QR Code Management</h4>
-                                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                                    <div class="mb-3">
-                                        <label for="qrCodePicture" class="form-label">Upload QR Code</label>
-                                        <input type="file" class="form-control" name="qrCodePicture" id="qrCodePicture" accept="image/*" required>
-                                        <div class="invalid-feedback">Please upload a valid QR Code image.</div>
+
+                                <!-- Action Buttons -->
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-success w-100" data-bs-toggle="modal"
+                                            data-bs-target="#addRenteeModal">
+                                            <i class="bi bi-person-plus"></i> Add Rentee
+                                        </button>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Upload QR Code</button>
-                                </form>
-                                <?php if (isset($uploadMessage)): ?>
-                                    <div class="alert alert-info mt-3"><?php echo $uploadMessage; ?></div>
-                                <?php endif; ?>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-danger w-100" data-bs-toggle="modal"
+                                            data-bs-target="#endLeaseModal">
+                                            <i class="bi bi-person-x"></i> End Lease
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- QR Code Upload Section -->
+                                <div class="card-body p-4">
+                                    <h4 class="fw-bold mb-4">QR Code Management</h4>
+                                    <?php if ($uploadMessage): ?>
+                                        <div class="alert alert-info"><?php echo $uploadMessage; ?></div>
+                                    <?php endif; ?>
+                                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                        <div class="mb-3">
+                                            <label for="qrCodePicture" class="form-label">Upload QR Code</label>
+                                            <input type="file" class="form-control" name="qrCodePicture"
+                                                id="qrCodePicture" accept="image/*" required>
+                                            <div class="invalid-feedback">Please upload a valid QR Code image.</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Upload QR Code</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- View Modal -->
-    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewModalLabel">View Rentee Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
+        <!-- View Modal -->
+        <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewModalLabel">Unit Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label for="unitStatus" class="form-label"><strong>Unit Status</strong></label>
-                            <p id="unitStatusText"></p>
+                            <label class="form-label"><strong>Unit</strong></label>
+                            <p id="viewUnit"></p>
                         </div>
                         <div class="mb-3">
-                            <label for="renteeName" class="form-label"><strong>Rentee Name</strong></label>
-                            <p id="renteeNameText"></p>
+                            <label class="form-label"><strong>Status</strong></label>
+                            <p id="viewStatus"></p>
                         </div>
                         <div class="mb-3">
-                            <label for="facebookName" class="form-label"><strong>Facebook Name</strong></label>
-                            <p id="facebookNameText"></p>
+                            <label class="form-label"><strong>Rentee Name</strong></label>
+                            <p id="viewRentee"></p>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label"><strong>Email</strong></label>
-                            <p id="emailText"></p>
+                            <label class="form-label"><strong>Facebook Profile</strong></label>
+                            <p id="viewFacebook"></p>
                         </div>
                         <div class="mb-3">
-                            <label for="phoneNumber" class="form-label"><strong>Phone Number</strong></label>
-                            <p id="phoneNumberText"></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Rentee Modal -->
-    <div class="modal fade" id="addRenteeModal" tabindex="-1" aria-labelledby="addRenteeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addRenteeModalLabel">Add Rentee</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addRenteeForm">
-                        <div class="mb-3">
-                            <label for="newRenteeName" class="form-label"><strong>Rentee Name</strong></label>
-                            <input type="text" class="form-control" id="newRenteeName" required>
+                            <label class="form-label"><strong>Email</strong></label>
+                            <p id="viewEmail"></p>
                         </div>
                         <div class="mb-3">
-                            <label for="newFacebookName" class="form-label"><strong>Facebook Name</strong></label>
-                            <input type="text" class="form-control" id="newFacebookName" required>
+                            <label class="form-label"><strong>Phone Number</strong></label>
+                            <p id="viewPhone"></p>
                         </div>
                         <div class="mb-3">
-                            <label for="newEmail" class="form-label"><strong>Email</strong></label>
-                            <input type="email" class="form-control" id="newEmail" required>
+                            <label class="form-label"><strong>Move-in Date</strong></label>
+                            <p id="viewMoveIn"></p>
                         </div>
-                        <div class="mb-3">
-                            <label for="newPhoneNumber" class="form-label"><strong>Phone Number</strong></label>
-                            <input type="text" class="form-control" id="newPhoneNumber" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="newUnit" class="form-label"><strong>Unit</strong></label>
-                            <select class="form-select" id="newUnit" required>
-                                <!-- Options will be populated dynamically -->
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-success">Add Rentee</button>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- End Lease Modal -->
-    <div class="modal fade" id="endLeaseModal" tabindex="-1" aria-labelledby="endLeaseModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="endLeaseModalLabel">End Lease</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="endLeaseForm">
-                        <div class="mb-3">
-                            <label for="endLeaseUnit" class="form-label"><strong>Unit</strong></label>
-                            <select class="form-select" id="endLeaseUnit" required>
-                                <!-- Options will be populated dynamically -->
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-danger">End Lease</button>
-                    </form>
+        <!-- Add Rentee Modal -->
+        <div class="modal fade" id="addRenteeModal" tabindex="-1" aria-labelledby="addRenteeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRenteeModalLabel">Add New Rentee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addRenteeForm" method="POST" action="add_rentee.php">
+                            <div class="mb-3">
+                                <label for="renteeName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="renteeName" name="renteeName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="facebookProfile" class="form-label">Facebook Profile</label>
+                                <input type="text" class="form-control" id="facebookProfile" name="facebookProfile" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="unit" class="form-label">Unit</label>
+                                <select class="form-select" id="unit" name="unit" required>
+                                    <option value="" selected disabled>Select a unit</option>
+                                    <?php
+                                    // Get available units
+                                    $availableUnitsQuery = "SELECT unit FROM unit_status WHERE status = 'Available'";
+                                    $availableUnitsResult = $conn->query($availableUnitsQuery);
+
+                                    while ($unit = $availableUnitsResult->fetch_assoc()) {
+                                        echo "<option value='" . $unit['unit'] . "'>" . $unit['unit'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="moveInDate" class="form-label">Move-in Date</label>
+                                <input type="date" class="form-control" id="moveInDate" name="moveInDate" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Add Rentee</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- End Lease Modal -->
+        <div class="modal fade" id="endLeaseModal" tabindex="-1" aria-labelledby="endLeaseModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="endLeaseModalLabel">End Lease</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="endLeaseForm" method="POST" action="end_lease.php">
+                            <div class="mb-3">
+                                <label for="leaseUnit" class="form-label">Select Unit</label>
+                                <select class="form-select" id="leaseUnit" name="leaseUnit" required>
+                                    <option value="" selected disabled>Select a unit</option>
+                                    <?php
+                                    // Get occupied units
+                                    $occupiedUnitsQuery = "SELECT unit FROM unit_status WHERE status = 'Occupied'";
+                                    $occupiedUnitsResult = $conn->query($occupiedUnitsQuery);
+
+                                    while ($unit = $occupiedUnitsResult->fetch_assoc()) {
+                                        echo "<option value='" . $unit['unit'] . "'>" . $unit['unit'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="moveOutDate" class="form-label">Move-out Date</label>
+                                <input type="date" class="form-control" id="moveOutDate" name="moveOutDate" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">End Lease</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            const hamBurger = document.querySelector(".toggle-btn");
+            hamBurger.addEventListener("click", function () {
+                document.querySelector("#sidebar").classList.toggle("expand");
+            });
+
+            // View Modal functionality
+            const viewModal = document.getElementById('viewModal');
+            viewModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                document.getElementById('viewUnit').textContent = button.getAttribute('data-unit');
+                document.getElementById('viewStatus').textContent = button.getAttribute('data-status');
+                document.getElementById('viewRentee').textContent = button.getAttribute('data-rentee');
+                document.getElementById('viewFacebook').textContent = button.getAttribute('data-facebook') || 'N/A';
+                document.getElementById('viewEmail').textContent = button.getAttribute('data-email') || 'N/A';
+                document.getElementById('viewPhone').textContent = button.getAttribute('data-phone') || 'N/A';
+                document.getElementById('viewMoveIn').textContent = button.getAttribute('data-movein') || 'N/A';
+            });
+
+            // Set move-in date to today by default
+            document.addEventListener('DOMContentLoaded', function() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('moveInDate').value = today;
+                document.getElementById('moveOutDate').value = today;
+            });
+
+            // Form validation
+            (function () {
+                'use strict';
+                const forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            })();
+        </script>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const hamBurger = document.querySelector(".toggle-btn");
-        hamBurger.addEventListener("click", function () {
-            document.querySelector("#sidebar").classList.toggle("expand");
-        });
-
-        function fillModal(unitStatus, renteeName, facebookName, email, phoneNumber) {
-            document.getElementById('unitStatusText').innerText = unitStatus;
-            document.getElementById('renteeNameText').innerText = renteeName;
-            document.getElementById('facebookNameText').innerText = facebookName;
-            document.getElementById('emailText').innerText = email;
-            document.getElementById('phoneNumberText').innerText = phoneNumber;
-        }
-
-        document.getElementById('addRenteeForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const newRenteeName = document.getElementById('newRenteeName').value;
-            const newFacebookName = document.getElementById('newFacebookName').value;
-            const newEmail = document.getElementById('newEmail').value;
-            const newPhoneNumber = document.getElementById('newPhoneNumber').value;
-            const newUnit = document.getElementById('newUnit').value;
-
-            // Here you would typically send this data to your server to update the database
-            console.log('Adding Rentee:', {
-                renteeName: newRenteeName,
-                facebookName: newFacebookName,
-                email: newEmail,
-                phoneNumber: newPhoneNumber,
-                unit: newUnit
-            });
-
-            // Close the modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addRenteeModal'));
-            modal.hide();
-        });
-
-        document.getElementById('endLeaseForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const endLeaseUnit = document.getElementById('endLeaseUnit').value;
-
-            // Here you would typically send this data to your server to update the database
-            console.log('Ending Lease for Unit:', endLeaseUnit);
-
-            // Close the modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
-            modal.hide();
-        });
-
-        // Populate available units in the Add Rentee modal
-        const addRenteeModal = document.getElementById('addRenteeModal');
-        addRenteeModal.addEventListener('show.bs.modal', function (event) {
-            const newUnitSelect = document.getElementById('newUnit');
-            newUnitSelect.innerHTML = ''; // Clear existing options
-            document.querySelectorAll('.unit.available').forEach(unit => {
-                const option = document.createElement('option');
-                option.value = unit.getAttribute('data-unit');
-                option.textContent = unit.getAttribute('data-unit');
-                newUnitSelect.appendChild(option);
-            });
-        });
-
-        // Populate occupied units in the End Lease modal
-        const endLeaseModal = document.getElementById('endLeaseModal');
-        endLeaseModal.addEventListener('show.bs.modal', function (event) {
-            const endLeaseUnitSelect = document.getElementById('endLeaseUnit');
-            endLeaseUnitSelect.innerHTML = ''; // Clear existing options
-            document.querySelectorAll('.unit.occupied').forEach(unit => {
-                const option = document.createElement('option');
-                option.value = unit.getAttribute('data-unit');
-                option.textContent = unit.getAttribute('data-unit');
-                endLeaseUnitSelect.appendChild(option);
-            });
-        });
-
-        // Bootstrap validation
-        (function () {
-            'use strict';
-            const forms = document.querySelectorAll('.needs-validation');
-            Array.prototype.slice.call(forms).forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        })();
-    </script>
 </body>
-
 </html>
+<?php $conn->close(); ?>
