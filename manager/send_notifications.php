@@ -11,7 +11,6 @@ include '../db_connection.php';
 $response = ['status' => '', 'message' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Debugging: Log received POST data
     error_log(print_r($_POST, true));
 
     $rentee_id = $_POST['rentee_id'] ?? null;

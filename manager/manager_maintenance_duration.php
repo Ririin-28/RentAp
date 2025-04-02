@@ -125,15 +125,11 @@
             const unitNumber = document.getElementById('unitNumber').value;
             const moveInDate = document.getElementById('moveInDate').value;
 
-            // Here you would typically make an AJAX call to insert the data into the database
-            // For now, we'll just simulate it by updating the UI
-
-            // Calculate remaining days
             const moveInDateObj = new Date(moveInDate);
             const currentDate = new Date();
             const timeDiff = currentDate.getTime() - moveInDateObj.getTime();
             const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-            const remainingDays = 62 - daysDiff; // Assuming default is 62 days
+            const remainingDays = 62 - daysDiff;
 
             const table = document.querySelector('table tbody');
             const newRow = document.createElement('tr');
@@ -146,11 +142,9 @@
             `;
             table.appendChild(newRow);
 
-            // Close the modal
             const addRenteeModal = new bootstrap.Modal(document.getElementById('addRenteeModal'));
             addRenteeModal.hide();
 
-            // Reset the form
             document.getElementById('addRenteeForm').reset();
         });
     </script>

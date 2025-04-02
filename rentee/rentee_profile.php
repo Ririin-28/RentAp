@@ -19,7 +19,6 @@ $result = $stmt->get_result();
 $rentee = $result->fetch_assoc();
 
 if (!$rentee) {
-    // Handle case where no matching rentee is found
     echo "No matching rentee found.";
     exit();
 }
@@ -216,8 +215,8 @@ $(document).ready(function () {
 
         const renteeData = {
             rentee_id: $('#rentee_id').val(),
-            unit: $('#unit').val(), // Hidden field
-            pin: $('#pin').val(), // Hidden field
+            unit: $('#unit').val(), 
+            pin: $('#pin').val(), 
             first_name: $('#first_name').val(),
             last_name: $('#last_name').val(),
             facebook_profile: $('#facebook_profile').val(),

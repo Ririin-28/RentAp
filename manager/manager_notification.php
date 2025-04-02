@@ -19,14 +19,14 @@
         <?php
         include '../db_connection.php';
 
-        // Query for pending payments
+        // Pending Payments
         $query = "SELECT R.rentee_id, CONCAT(R.first_name, ' ', R.last_name) AS full_name, R.email, P.due_date, P.status 
                   FROM Rentee R 
                   JOIN Pending_Payments P ON R.rentee_id = P.rentee_id 
                   WHERE P.status = 'Pending'";
         $result = $conn->query($query);
 
-        // Query for rentee payments
+        // Rentee Payments
         $paymentsQuery = "
             SELECT RP.rentee_id, CONCAT(R.first_name, ' ', R.last_name) AS full_name, RP.payment_picture, RP.date AS payment_date, P.due_date
             FROM rentee_payment RP
@@ -245,7 +245,7 @@
             });
         });
 
-        // Individual reminder
+        // Individual Reminder
         document.querySelectorAll('.send-reminder-btn').forEach(button => {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -253,7 +253,6 @@
                 const form = this.closest('.send-reminder-form');
                 const formData = new FormData(form);
 
-                // Disable the button and show a loading spinner
                 const originalText = this.innerHTML;
                 this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
                 this.disabled = true;
@@ -286,19 +285,17 @@
                     modal.show();
                 })
                 .finally(() => {
-                    // Re-enable the button and restore its original text
                     this.innerHTML = originalText;
                     this.disabled = false;
                 });
             });
         });
 
-        // Bulk reminder
+        // Bulk Reminder
         document.getElementById('bulkSendBtn').addEventListener('click', function () {
             const form = document.getElementById('bulk-reminder-form');
             const formData = new FormData(form);
 
-            // Disable the button and show a loading spinner
             const originalText = this.innerHTML;
             this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
             this.disabled = true;
@@ -331,13 +328,12 @@
                 modal.show();
             })
             .finally(() => {
-                // Re-enable the button and restore its original text
                 this.innerHTML = originalText;
                 this.disabled = false;
             });
         });
 
-        // Send receipt
+        // Send Receipt
         document.querySelectorAll('.send-receipt-btn').forEach(button => {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -345,7 +341,6 @@
                 const form = this.closest('.send-receipt-form');
                 const formData = new FormData(form);
 
-                // Disable the button and show a loading spinner
                 const originalText = this.innerHTML;
                 this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
                 this.disabled = true;
@@ -378,7 +373,6 @@
                     modal.show();
                 })
                 .finally(() => {
-                    // Re-enable the button and restore its original text
                     this.innerHTML = originalText;
                     this.disabled = false;
                 });
@@ -387,7 +381,6 @@
 
         let selectedMarkAsPaidForm = null;
 
-        // Handle "Mark as Paid" button click
         document.querySelectorAll('.mark-as-paid-btn').forEach(button => {
             button.addEventListener('click', function () {
                 selectedMarkAsPaidForm = this.closest('.mark-as-paid-form');
@@ -396,18 +389,15 @@
             });
         });
 
-        // Handle confirmation in the modal
         document.getElementById('confirmMarkAsPaidBtn').addEventListener('click', function () {
             if (!selectedMarkAsPaidForm) return;
 
             const formData = new FormData(selectedMarkAsPaidForm);
 
-            // Disable the button and show a loading spinner
             const originalText = this.innerHTML;
             this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
             this.disabled = true;
 
-            // Hide the confirmation modal
             const confirmModal = bootstrap.Modal.getInstance(document.getElementById('confirmMarkAsPaidModal'));
             confirmModal.hide();
 
@@ -424,7 +414,6 @@
                     modalMessage.textContent = data.message;
                     modalMessage.className = 'text-success';
 
-                    // Optionally, remove the row from the table
                     selectedMarkAsPaidForm.closest('tr').remove();
                 } else {
                     modalMessage.textContent = data.message;
@@ -442,7 +431,6 @@
                 responseModal.show();
             })
             .finally(() => {
-                // Re-enable the button and restore its original text
                 this.innerHTML = originalText;
                 this.disabled = false;
             });

@@ -347,12 +347,12 @@
     <script>
         var map = L.map('map').setView([14.723024323409765, 121.03681689362779], 14);
 
-        // Add OpenStreetMap tiles
+        // OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Add a marker
+        // Marker
         var marker = L.marker([14.723024323409765, 121.03681689362779]).addTo(map)
             .bindPopup("Millionaire's Village, 4 Silver, Novaliches, Quezon City, 1123 Metro Manila")
             .openPopup();

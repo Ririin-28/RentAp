@@ -90,7 +90,7 @@ if (!isset($_SESSION['m_name'])) {
                                         </table>
                                     </div>
                                 </div>
-                                <!-- Moved Total Requests to the bottom -->
+                                <!-- Total Requests -->
                                 <div class="card-footer">
                                     <span class="total-requests">Total Requests: <strong><?= $result->num_rows ?></strong></span>
                                 </div>

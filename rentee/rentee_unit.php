@@ -40,7 +40,6 @@ if ($qrRow = $qrResult->fetch_assoc()) {
 
 $qrStmt->close();
 
-// Check if rentee has remaining days in Agreement_Duration
 $remainingDaysStmt = $conn->prepare("SELECT remaining_days FROM Agreement_Duration WHERE rentee_id = ? AND unit = ?");
 $remainingDaysStmt->bind_param("is", $rentee_id, $p_unit);
 $remainingDaysStmt->execute();
@@ -52,7 +51,6 @@ if ($remainingDaysRow = $remainingDaysResult->fetch_assoc()) {
 }
 $remainingDaysStmt->close();
 
-// Handle maintenance request submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['maintenanceCategory'], $_POST['maintenanceIssue'], $_POST['maintenanceDescription'])) {
     if ($canRequestMaintenance) {
         $category = $_POST['maintenanceCategory'];
@@ -361,14 +359,12 @@ $conn->close();
         const description = document.getElementById('maintenanceDescription').value;
 
         if (form.checkValidity() && category && issue && description) {
-            // Set the issue value in a hidden input field
             const hiddenIssueInput = document.createElement('input');
             hiddenIssueInput.type = 'hidden';
             hiddenIssueInput.name = 'maintenanceIssue';
             hiddenIssueInput.value = issue;
             form.appendChild(hiddenIssueInput);
 
-            // Simulate form submission via AJAX
             const formData = new FormData(form);
             fetch('', {
                 method: 'POST',
@@ -376,22 +372,18 @@ $conn->close();
             })
             .then(response => response.text())
             .then(() => {
-                // Show maintenance message dynamically
                 const maintenanceMessage = document.createElement('div');
                 maintenanceMessage.className = 'alert alert-info text-center';
                 maintenanceMessage.textContent = 'Maintenance request submitted successfully!';
                 form.parentElement.insertBefore(maintenanceMessage, form);
 
-                // Hide the modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
                 modal.hide();
 
-                // Remove the message after 5 seconds
                 setTimeout(() => {
                     maintenanceMessage.remove();
                 }, 5000);
 
-                // Reset the form
                 form.reset();
                 form.classList.remove('was-validated');
                 unitDropdown.style.display = 'none';

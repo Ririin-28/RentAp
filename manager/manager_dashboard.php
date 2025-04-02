@@ -2,34 +2,32 @@
 session_start();
 include '../db_connection.php';
 
-// Check if the manager is logged in
 if (!isset($_SESSION['m_name'])) {
     header("Location: ../manager/manager_login.php");
     exit();
 }
 
-// Fetch data for dashboard
-// 1. Count of Occupied Rooms
+// Count of Occupied Rooms
 $occupiedRoomsQuery = "SELECT COUNT(*) AS occupied_count FROM Unit_Status WHERE status = 'Occupied'";
 $occupiedRoomsResult = $conn->query($occupiedRoomsQuery);
 $occupiedRooms = $occupiedRoomsResult->fetch_assoc()['occupied_count'];
 
-// 2. Count of Available Rooms
+// Count of Available Rooms
 $availableRoomsQuery = "SELECT COUNT(*) AS available_count FROM Unit_Status WHERE status = 'Available'";
 $availableRoomsResult = $conn->query($availableRoomsQuery);
 $availableRooms = $availableRoomsResult->fetch_assoc()['available_count'];
 
-// 3. Count of Maintenance Requests
+// Count of Maintenance Requests
 $maintenanceRequestsQuery = "SELECT COUNT(*) AS maintenance_count FROM Maintenance_Request WHERE status = 'Pending'";
 $maintenanceRequestsResult = $conn->query($maintenanceRequestsQuery);
 $maintenanceRequests = $maintenanceRequestsResult->fetch_assoc()['maintenance_count'];
 
-// 4. Count of Overdue Payments
+// Count of Overdue Payments
 $overduePaymentsQuery = "SELECT COUNT(*) AS overdue_count FROM Payment_History WHERE status = 'Overdue'";
 $overduePaymentsResult = $conn->query($overduePaymentsQuery);
 $overduePayments = $overduePaymentsResult->fetch_assoc()['overdue_count'];
 
-// 5. Upcoming Due Dates
+// Upcoming Due Dates
 $upcomingDueDatesQuery = "
     SELECT rentee_id, due_date, DATEDIFF(due_date, CURDATE()) AS days_left
     FROM Pending_Payments
@@ -38,7 +36,7 @@ $upcomingDueDatesQuery = "
 ";
 $upcomingDueDatesResult = $conn->query($upcomingDueDatesQuery);
 
-// 6. Overdue Dates
+// Overdue Dates
 $overdueDatesQuery = "
     SELECT rentee_id, due_date, DATEDIFF(CURDATE(), due_date) AS days_elapsed
     FROM Pending_Payments
@@ -47,7 +45,7 @@ $overdueDatesQuery = "
 ";
 $overdueDatesResult = $conn->query($overdueDatesQuery);
 
-// 7. Peak Rental Periods (Move-in Dates by Month)
+// Peak Rental Periods (Move-in Dates by Month)
 $peakRentalQuery = "
     SELECT MONTH(move_in_date) AS month, COUNT(*) AS count
     FROM Agreement_Duration
@@ -57,13 +55,12 @@ $peakRentalQuery = "
 ";
 $peakRentalResult = $conn->query($peakRentalQuery);
 
-// Prepare data for the Peak Rental Periods chart
-$peakRentalData = array_fill(1, 12, 0); // Initialize an array with 12 months (1-12)
+$peakRentalData = array_fill(1, 12, 0);
 while ($row = $peakRentalResult->fetch_assoc()) {
     $peakRentalData[(int)$row['month']] = (int)$row['count'];
 }
 
-// 8. Monthly Revenue (Based on Payment_History)
+// Monthly Revenue Based on Payment_History
 $monthlyRevenueQuery = "
     SELECT MONTH(date) AS month, SUM(amount) AS total_revenue
     FROM Payment_History
@@ -73,13 +70,12 @@ $monthlyRevenueQuery = "
 ";
 $monthlyRevenueResult = $conn->query($monthlyRevenueQuery);
 
-// Prepare data for the Monthly Revenue chart
-$monthlyRevenueData = array_fill(1, 12, 0); // Initialize an array with 12 months (1-12)
+$monthlyRevenueData = array_fill(1, 12, 0);
 while ($row = $monthlyRevenueResult->fetch_assoc()) {
     $monthlyRevenueData[(int)$row['month']] = (float)$row['total_revenue'];
 }
 
-// 9. Yearly Revenue (Based on Payment_History)
+// Yearly Revenue Based on Payment_History
 $yearlyRevenueQuery = "
     SELECT YEAR(date) AS year, SUM(amount) AS total_revenue
     FROM Payment_History
@@ -89,13 +85,12 @@ $yearlyRevenueQuery = "
 ";
 $yearlyRevenueResult = $conn->query($yearlyRevenueQuery);
 
-// Prepare data for the Yearly Revenue chart
 $yearlyRevenueData = [];
 while ($row = $yearlyRevenueResult->fetch_assoc()) {
     $yearlyRevenueData[(int)$row['year']] = (float)$row['total_revenue'];
 }
 
-// Fetch data for Payment Status Breakdown
+// Payment Status Breakdown
 $paymentStatusQuery = "
     SELECT status, COUNT(*) AS count
     FROM (
@@ -107,7 +102,6 @@ $paymentStatusQuery = "
 ";
 $paymentStatusResult = $conn->query($paymentStatusQuery);
 
-// Prepare data for the Payment Status Breakdown chart
 $paymentStatusData = [
     'Paid' => 0,
     'Overdue' => 0,
@@ -350,7 +344,6 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
                 const yearlyRevenueData = <?= json_encode(array_values($yearlyRevenueData)) ?>;
                 const yearlyRevenueLabels = <?= json_encode(array_keys($yearlyRevenueData)) ?>;
 
-                // Initialize the chart
                 let revenueChartOptions = {
                     chart: { type: 'bar', height: 300 },
                     series: [{
@@ -369,7 +362,6 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
                 let revenueChart = new ApexCharts(document.querySelector("#revenueChart"), revenueChartOptions);
                 revenueChart.render();
 
-                // Handle view change
                 document.getElementById('revenueViewSelector').addEventListener('change', function (e) {
                     const view = e.target.value;
                     if (view === 'monthly') {
@@ -387,7 +379,6 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
                     }
                 });
 
-                // Payment Status Breakdown Chart
                 var paymentStatusOptions = {
                     chart: { type: 'pie', height: 300 },
                     series: [<?= $paymentStatusData['Paid'] ?>, <?= $paymentStatusData['Overdue'] ?>, <?= $paymentStatusData['Pending'] ?>],

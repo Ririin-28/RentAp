@@ -2,7 +2,7 @@
 session_start();
 include '../db_connection.php';
 
-// Handle QR Code upload
+// QR Code upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qrCodePicture'])) {
     $uploadDir = '../uploads/';
     $fileName = basename($_FILES['qrCodePicture']['name']);
@@ -22,12 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['qrCodePicture'])) {
     exit();
 }
 
-// Display messages
 $uploadMessage = $_SESSION['upload_message'] ?? '';
 $successMessage = $_SESSION['success_message'] ?? '';
 $errorMessage = $_SESSION['error_message'] ?? '';
 
-// Clear messages after displaying
 unset($_SESSION['upload_message']);
 unset($_SESSION['success_message']);
 unset($_SESSION['error_message']);
@@ -241,7 +239,7 @@ unset($_SESSION['error_message']);
                                 <?php if ($errorMessage): ?>
                                     <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
                                 <?php endif; ?>
-                                
+
                                 <h4 class="card-title mb-4"><strong>Apartment Layout</strong></h4>
                                 <!-- Legend -->
                                 <div class="legend">
@@ -258,7 +256,6 @@ unset($_SESSION['error_message']);
                                 <!-- Apartment Layout -->
                                 <div class="apartment-layout">
                                     <?php
-                                    // Fetch unit data with rentee information
                                     $query = "SELECT us.unit, us.status, 
                                              CONCAT(r.first_name, ' ', r.last_name) AS rentee_full_name,
                                              r.facebook_profile, r.email, r.phone_number,
@@ -272,7 +269,6 @@ unset($_SESSION['error_message']);
                                         $units[$row['unit']] = $row;
                                     }
 
-                                    // Define the unit arrangement
                                     $unitGroups = [
                                         ['G-4', 'G-3', 'G-2', 'G-1'],
                                         ['K-4', 'K-3', 'K-2', 'K-1'],
@@ -287,11 +283,12 @@ unset($_SESSION['error_message']);
                                                     $unitData = $units[$unit] ?? null;
                                                     $status = $unitData['status'] ?? 'Available';
                                                     $statusClass = strtolower($status);
-                                                    ?>
-                                                    <div class="unit-card <?php echo $statusClass; ?>" data-bs-toggle="modal" data-bs-target="#viewModal" 
+                                                ?>
+                                                    <div class="unit-card <?php echo $statusClass; ?>" data-bs-toggle="modal" data-bs-target="#viewModal"
                                                         data-unit="<?php echo $unit; ?>"
                                                         data-status="<?php echo $status; ?>"
-                                                        data-rentee="<?php echo htmlspecialchars($unitData['rentee_full_name'] ?? 'Vacant'); ?>"
+                                                        data-rentee="<?php echo htmlspecialchars($unitData['first_name'] ?? 'Vacant'); ?>"
+                                                        data-rentee="<?php echo htmlspecialchars($unitData['last_name'] ?? 'Vacant'); ?>"
                                                         data-facebook="<?php echo htmlspecialchars($unitData['facebook_profile'] ?? ''); ?>"
                                                         data-email="<?php echo htmlspecialchars($unitData['email'] ?? ''); ?>"
                                                         data-phone="<?php echo htmlspecialchars($unitData['phone_number'] ?? ''); ?>"
@@ -326,13 +323,11 @@ unset($_SESSION['error_message']);
                                 <!-- Action Buttons -->
                                 <div class="row mt-4">
                                     <div class="col-md-6">
-                                        <button class="btn btn-success w-100" data-bs-toggle="modal"
+                                        <button class="btn btn-success w-20%" data-bs-toggle="modal"
                                             data-bs-target="#addRenteeModal">
                                             <i class="bi bi-person-plus"></i> Add Rentee
                                         </button>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-danger w-100" data-bs-toggle="modal"
+                                        <button class="btn btn-danger w-20%" data-bs-toggle="modal"
                                             data-bs-target="#endLeaseModal">
                                             <i class="bi bi-person-x"></i> End Lease
                                         </button>
@@ -418,8 +413,12 @@ unset($_SESSION['error_message']);
                     <div class="modal-body">
                         <form id="addRenteeForm" method="POST" action="add_rentee.php">
                             <div class="mb-3">
-                                <label for="renteeName" class="form-label">Full Name</label>
+                                <label for="renteeName" class="form-label">First Name</label>
                                 <input type="text" class="form-control" id="renteeName" name="renteeName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
                             <div class="mb-3">
                                 <label for="facebookProfile" class="form-label">Facebook Profile</label>
@@ -438,7 +437,6 @@ unset($_SESSION['error_message']);
                                 <select class="form-select" id="unit" name="unit" required>
                                     <option value="" selected disabled>Select a unit</option>
                                     <?php
-                                    // Get available units
                                     $availableUnitsQuery = "SELECT unit FROM unit_status WHERE status = 'Available'";
                                     $availableUnitsResult = $conn->query($availableUnitsQuery);
 
@@ -477,8 +475,7 @@ unset($_SESSION['error_message']);
                                 <select class="form-select" id="leaseUnit" name="leaseUnit" required>
                                     <option value="" selected disabled>Select a unit</option>
                                     <?php
-                                    // Get occupied units
-                                    $occupiedUnitsQuery = "SELECT unit FROM unit_status WHERE status = 'Occupied'";
+                                    $occupiedUnitsQuery = "SELECT unit FROM Unit_Status WHERE status = 'Occupied'";
                                     $occupiedUnitsResult = $conn->query($occupiedUnitsQuery);
 
                                     while ($unit = $occupiedUnitsResult->fetch_assoc()) {
@@ -501,16 +498,33 @@ unset($_SESSION['error_message']);
             </div>
         </div>
 
+        <!-- Notification Modal -->
+        <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notificationModalLabel">Notification</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p id="notificationMessage" class="fs-5"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             const hamBurger = document.querySelector(".toggle-btn");
-            hamBurger.addEventListener("click", function () {
+            hamBurger.addEventListener("click", function() {
                 document.querySelector("#sidebar").classList.toggle("expand");
             });
 
-            // View Modal functionality
             const viewModal = document.getElementById('viewModal');
-            viewModal.addEventListener('show.bs.modal', function (event) {
+            viewModal.addEventListener('show.bs.modal', function(event) {
                 const button = event.relatedTarget;
                 document.getElementById('viewUnit').textContent = button.getAttribute('data-unit');
                 document.getElementById('viewStatus').textContent = button.getAttribute('data-status');
@@ -521,19 +535,17 @@ unset($_SESSION['error_message']);
                 document.getElementById('viewMoveIn').textContent = button.getAttribute('data-movein') || 'N/A';
             });
 
-            // Set move-in date to today by default
             document.addEventListener('DOMContentLoaded', function() {
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('moveInDate').value = today;
                 document.getElementById('moveOutDate').value = today;
             });
 
-            // Form validation
-            (function () {
+            (function() {
                 'use strict';
                 const forms = document.querySelectorAll('.needs-validation');
-                Array.prototype.slice.call(forms).forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
+                Array.prototype.slice.call(forms).forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
                         if (!form.checkValidity()) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -542,8 +554,161 @@ unset($_SESSION['error_message']);
                     }, false);
                 });
             })();
+
+            document.getElementById('addRenteeForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const form = event.target;
+                const formData = new FormData(form);
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+                submitButton.disabled = true;
+
+                fetch('add_rentee.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                        const notificationMessage = document.getElementById('notificationMessage');
+
+                        if (data.success) {
+                            notificationMessage.textContent = data.message;
+                            notificationMessage.className = 'text-success';
+
+                            const addRenteeModal = bootstrap.Modal.getInstance(document.getElementById('addRenteeModal'));
+                            addRenteeModal.hide();
+
+                            document.getElementById('addRenteeModal').removeEventListener('hidden.bs.modal', showNotificationModal);
+                            document.getElementById('addRenteeModal').addEventListener('hidden.bs.modal', showNotificationModal);
+
+                            function showNotificationModal() {
+                                notificationModal.show();
+
+                                document.getElementById('notificationModal').addEventListener('hidden.bs.modal', () => {
+                                    location.reload();
+                                });
+                            }
+                        } else {
+                            notificationMessage.textContent = data.message;
+                            notificationMessage.className = 'text-danger';
+
+                            const addRenteeModal = bootstrap.Modal.getInstance(document.getElementById('addRenteeModal'));
+                            addRenteeModal.hide();
+
+                            document.getElementById('addRenteeModal').removeEventListener('hidden.bs.modal', showNotificationModal);
+                            document.getElementById('addRenteeModal').addEventListener('hidden.bs.modal', showNotificationModal);
+
+                            function showNotificationModal() {
+                                notificationModal.show();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                        const notificationMessage = document.getElementById('notificationMessage');
+                        notificationMessage.textContent = 'An error occurred while adding the rentee.';
+                        notificationMessage.className = 'text-danger';
+
+                        const addRenteeModal = bootstrap.Modal.getInstance(document.getElementById('addRenteeModal'));
+                        addRenteeModal.hide();
+
+                        document.getElementById('addRenteeModal').removeEventListener('hidden.bs.modal', showNotificationModal);
+                        document.getElementById('addRenteeModal').addEventListener('hidden.bs.modal', showNotificationModal);
+
+                        function showNotificationModal() {
+                            notificationModal.show();
+                        }
+                    })
+                    .finally(() => {
+                        submitButton.innerHTML = originalText;
+                        submitButton.disabled = false;
+                    });
+            });
+
+            document.getElementById('endLeaseForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const form = event.target;
+                const formData = new FormData(form);
+
+                const submitButton = form.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Ending Lease...';
+                submitButton.disabled = true;
+
+                fetch('end_lease.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                        const notificationMessage = document.getElementById('notificationMessage');
+
+                        if (data.success) {
+                            notificationMessage.textContent = data.message;
+                            notificationMessage.className = 'text-success';
+
+                            const endLeaseModal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
+                            endLeaseModal.hide();
+
+                            const endLeaseModalElement = document.getElementById('endLeaseModal');
+                            endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
+                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
+
+                            function showNotificationModal() {
+                                notificationModal.show();
+
+                                document.getElementById('notificationModal').addEventListener('hidden.bs.modal', () => {
+                                    location.reload();
+                                });
+                            }
+                        } else {
+                            notificationMessage.textContent = data.message;
+                            notificationMessage.className = 'text-danger';
+
+                            const endLeaseModal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
+                            endLeaseModal.hide();
+
+                            const endLeaseModalElement = document.getElementById('endLeaseModal');
+                            endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
+                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
+
+                            function showNotificationModal() {
+                                notificationModal.show();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                        const notificationMessage = document.getElementById('notificationMessage');
+                        notificationMessage.textContent = 'An error occurred while ending the lease.';
+                        notificationMessage.className = 'text-danger';
+
+                        const endLeaseModal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
+                        endLeaseModal.hide();
+
+                        const endLeaseModalElement = document.getElementById('endLeaseModal');
+                        endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
+                        endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
+
+                        function showNotificationModal() {
+                            notificationModal.show();
+                        }
+                    })
+                    .finally(() => {
+                        submitButton.innerHTML = originalText;
+                        submitButton.disabled = false;
+                    });
+            });
         </script>
     </div>
 </body>
+
 </html>
 <?php $conn->close(); ?>

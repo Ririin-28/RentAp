@@ -8,7 +8,6 @@ require '../vendor/setasign/fpdf/fpdf.php';
 
 header('Content-Type: application/json');
 
-// Define the sendEmail function
 function sendEmail($to, $subject, $message, $attachments = []) {
     $mail = new PHPMailer(true);
 
@@ -45,7 +44,6 @@ function sendEmail($to, $subject, $message, $attachments = []) {
     }
 }
 
-// Handle receipt email sending
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (!isset($_POST['rentee_id']) || !isset($_POST['date'])) {
@@ -55,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $renteeId = intval($_POST['rentee_id']);
         $date = $_POST['date'];
 
-        // Fetch rentee details from database
         $stmt = $conn->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name, email FROM rentee WHERE rentee_id = ?");
         $stmt->bind_param("i", $renteeId);
         $stmt->execute();
@@ -67,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Rentee details not found.');
         }
 
-        // Generate PDF receipt
         $receiptsDir = "../receipts";
         if (!is_dir($receiptsDir)) {
             mkdir($receiptsDir, 0777, true);
@@ -93,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Failed to create receipt file.');
         }
 
-        // Send email with receipt
         $subject = "Payment Receipt";
         $message = "Dear $fullName,\n\nWe have received your payment for the date $date. Please find your receipt attached.\n\nThank you.";
         $attachments = [$pdfFilePath];
@@ -104,10 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Failed to send receipt. Please check the email configuration.');
         }
     } catch (Exception $e) {
-        // Log the error for debugging
         error_log($e->getMessage());
 
-        // Return error response
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
 }

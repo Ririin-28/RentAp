@@ -123,20 +123,16 @@ if (!isset($_SESSION['m_name'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // Database connection
                                     $conn = new mysqli("localhost", "root", "", "RentAp");
 
-                                    // Check connection
                                     if ($conn->connect_error) {
                                         die("Connection failed: " . $conn->connect_error);
                                     }
 
-                                    // Fetch data from Rentee_Archive table
                                     $sql = "SELECT rentee_id, CONCAT(first_name, ' ', last_name) AS full_name, unit, contact_number, email, move_out_date FROM Rentee_Archive";
                                     $result = $conn->query($sql);
 
                                     if ($result->num_rows > 0) {
-                                        // Output data for each row
                                         while ($row = $result->fetch_assoc()) {
                                             echo "<tr>
                                                     <td>{$row['rentee_id']}</td>
