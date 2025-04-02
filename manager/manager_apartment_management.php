@@ -658,7 +658,6 @@ unset($_SESSION['error_message']);
 
                             const endLeaseModalElement = document.getElementById('endLeaseModal');
                             endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
-                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
 
                             function showNotificationModal() {
                                 notificationModal.show();
@@ -667,6 +666,8 @@ unset($_SESSION['error_message']);
                                     location.reload();
                                 });
                             }
+
+                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
                         } else {
                             notificationMessage.textContent = data.message;
                             notificationMessage.className = 'text-danger';
@@ -676,11 +677,12 @@ unset($_SESSION['error_message']);
 
                             const endLeaseModalElement = document.getElementById('endLeaseModal');
                             endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
-                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
 
                             function showNotificationModal() {
                                 notificationModal.show();
                             }
+
+                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
                         }
                     })
                     .catch(error => {
@@ -695,11 +697,12 @@ unset($_SESSION['error_message']);
 
                         const endLeaseModalElement = document.getElementById('endLeaseModal');
                         endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
-                        endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
 
                         function showNotificationModal() {
                             notificationModal.show();
                         }
+
+                        endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
                     })
                     .finally(() => {
                         submitButton.innerHTML = originalText;
