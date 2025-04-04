@@ -5,17 +5,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $p_name = $_POST['p_name'];
     $p_password = $_POST['p_password'];
 
-    $stmt = $conn->prepare("CALL validate_manager_login(?, ?)");
+    $stmt = $conn->prepare("SELECT m_name FROM manager WHERE m_name = ? AND password = ?");
     $stmt->bind_param("ss", $p_name, $p_password);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-      session_start();
-      $_SESSION['m_name'] = $p_name;
+        session_start();
+        $_SESSION['m_name'] = $p_name;
         echo json_encode(['status' => 'success', 'redirect' => '../manager/manager_dashboard.php']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Invalid Coordinator ID or Password.']);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid Username or Password.']);
     }
 
     $stmt->close();

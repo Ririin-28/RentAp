@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $p_first_name = $_POST['p_first_name'];
     $p_pin = $_POST['p_pin'];
 
-    $stmt = $conn->prepare("CALL validate_rentee_login(?, ?, ?)");
-    $stmt->bind_param("sss", $p_unit, $p_first_name, $p_pin);
+    $stmt = $conn->prepare("SELECT rentee_id FROM rentee WHERE unit = ? AND first_name = ? AND pin = ?");
+    $stmt->bind_param("ssi", $p_unit, $p_first_name, $p_pin);
     $stmt->execute();
     $result = $stmt->get_result();
 
