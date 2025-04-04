@@ -20,7 +20,7 @@ try {
 
     $stmt = $conn->prepare("
         SELECT r.rentee_id, r.first_name, r.last_name, r.phone_number, r.email
-        FROM Rentee r
+        FROM rentee r
         WHERE r.unit = ?
     ");
     $stmt->bind_param("s", $unit);
@@ -39,36 +39,57 @@ try {
     $phoneNumber = $rentee['phone_number'];
     $email = $rentee['email'];
 
-    $stmt = $conn->prepare("
-        INSERT INTO Rentee_Archive (rentee_id, first_name, last_name, unit, contact_number, email, move_out_date)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    ");
-    $stmt->bind_param("issssss", $renteeId, $firstName, $lastName, $unit, $phoneNumber, $email, $moveOutDate);
-    $stmt->execute();
-    $stmt->close();
-
-    $stmt = $conn->prepare("DELETE FROM Rentee WHERE rentee_id = ?");
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM rentee_archive WHERE rentee_id = ?");
     $stmt->bind_param("i", $renteeId);
     $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
     $stmt->close();
 
-    $stmt = $conn->prepare("DELETE FROM Agreement_Duration WHERE rentee_id = ?");
+    if ($count > 0) {
+        $message = 'Rentee already archived successfully!';
+    } else {
+        $stmt = $conn->prepare("
+            INSERT INTO rentee_archive (rentee_id, first_name, last_name, unit, contact_number, email, move_out_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->bind_param("issssss", $renteeId, $firstName, $lastName, $unit, $phoneNumber, $email, $moveOutDate);
+        if (!$stmt->execute()) {
+            throw new Exception('Failed to archive rentee: ' . $stmt->error);
+        }
+        $stmt->close();
+
+        $message = 'Rentee archived successfully!';
+    }
+
+    $stmt = $conn->prepare("DELETE FROM rentee WHERE rentee_id = ?");
     $stmt->bind_param("i", $renteeId);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to delete rentee: ' . $stmt->error);
+    }
     $stmt->close();
 
-    $stmt = $conn->prepare("UPDATE Unit_Status SET status = 'Available' WHERE unit = ?");
+    $stmt = $conn->prepare("DELETE FROM agreement_duration WHERE rentee_id = ?");
+    $stmt->bind_param("i", $renteeId);
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to delete agreement duration: ' . $stmt->error);
+    }
+    $stmt->close();
+
+    $stmt = $conn->prepare("UPDATE unit_status SET status = 'Available' WHERE unit = ?");
     $stmt->bind_param("s", $unit);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to update unit status: ' . $stmt->error);
+    }
     $stmt->close();
 
     $conn->commit();
 
-    echo json_encode(['success' => true, 'message' => 'Lease ended successfully and rentee archived.']);
+    echo json_encode(['success' => true, 'message' => $message . ' Lease ended successfully and rentee archived.']);
 } catch (Exception $e) {
     $conn->rollback();
     error_log($e->getMessage());
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
 } finally {
     $conn->close();
 }

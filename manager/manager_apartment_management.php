@@ -490,7 +490,7 @@ unset($_SESSION['error_message']);
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-danger">End Lease</button>
+                                <button type="submit" class="btn btn-danger" id="endLeaseButton">End Lease</button>
                             </div>
                         </form>
                     </div>
@@ -630,7 +630,7 @@ unset($_SESSION['error_message']);
             });
 
             document.getElementById('endLeaseForm').addEventListener('submit', function (event) {
-                event.preventDefault();
+                event.preventDefault(); // Prevent the default form submission
 
                 const form = event.target;
                 const formData = new FormData(form);
@@ -644,7 +644,12 @@ unset($_SESSION['error_message']);
                     method: 'POST',
                     body: formData
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json(); // Parse the JSON response
+                    })
                     .then(data => {
                         const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
                         const notificationMessage = document.getElementById('notificationMessage');
@@ -653,62 +658,60 @@ unset($_SESSION['error_message']);
                             notificationMessage.textContent = data.message;
                             notificationMessage.className = 'text-success';
 
-                            const endLeaseModal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
-                            endLeaseModal.hide();
-
-                            const endLeaseModalElement = document.getElementById('endLeaseModal');
-                            endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
-
-                            function showNotificationModal() {
-                                notificationModal.show();
-
-                                document.getElementById('notificationModal').addEventListener('hidden.bs.modal', () => {
-                                    location.reload();
-                                });
-                            }
-
-                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
+                            // Reload the page after the modal is closed
+                            document.getElementById('notificationModal').addEventListener('hidden.bs.modal', () => {
+                                location.reload();
+                            });
                         } else {
                             notificationMessage.textContent = data.message;
                             notificationMessage.className = 'text-danger';
-
-                            const endLeaseModal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
-                            endLeaseModal.hide();
-
-                            const endLeaseModalElement = document.getElementById('endLeaseModal');
-                            endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
-
-                            function showNotificationModal() {
-                                notificationModal.show();
-                            }
-
-                            endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
                         }
+
+                        // Show the notification modal
+                        notificationModal.show();
                     })
                     .catch(error => {
                         console.error('Error:', error);
+
                         const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
                         const notificationMessage = document.getElementById('notificationMessage');
                         notificationMessage.textContent = 'An error occurred while ending the lease.';
                         notificationMessage.className = 'text-danger';
 
-                        const endLeaseModal = bootstrap.Modal.getInstance(document.getElementById('endLeaseModal'));
-                        endLeaseModal.hide();
-
-                        const endLeaseModalElement = document.getElementById('endLeaseModal');
-                        endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
-
-                        function showNotificationModal() {
-                            notificationModal.show();
-                        }
-
-                        endLeaseModalElement.addEventListener('hidden.bs.modal', showNotificationModal);
+                        // Show the notification modal
+                        notificationModal.show();
                     })
                     .finally(() => {
                         submitButton.innerHTML = originalText;
                         submitButton.disabled = false;
                     });
             });
+
+            // Example JavaScript to prevent duplicate submissions
+            document.getElementById('endLeaseButton').addEventListener('click', function (e) {
+                const button = e.target;
+                button.disabled = true; // Disable the button
+                button.innerText = 'Processing...'; // Optional: Change button text to indicate processing
+
+                // Submit the form or make the AJAX request
+                const form = document.getElementById('endLeaseForm');
+                form.submit();
+
+                // Re-enable the button after a delay (optional, if needed)
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.innerText = 'End Lease';
+                }, 5000); // Adjust the delay as needed
+            });
+
+            const endLeaseModalElement = document.getElementById('endLeaseModal'); 
+            const endLeaseModal = bootstrap.Modal.getInstance(endLeaseModalElement);
+
+            // Hide the modal
+            endLeaseModal.hide();
+
+            // Remove the event listener
+            endLeaseModalElement.removeEventListener('hidden.bs.modal', showNotificationModal);
         </script>
     </div>
 </body>
