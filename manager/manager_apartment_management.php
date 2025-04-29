@@ -491,6 +491,7 @@ unset($_SESSION['error_message']);
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-danger" id="endLeaseButton">End Lease</button>
+                                <button type="submit" class="btn btn-danger" id="endLeaseButton">End Lease</button>
                             </div>
                         </form>
                     </div>
@@ -670,6 +671,7 @@ unset($_SESSION['error_message']);
                     })
                     .catch(error => {
                         console.error('Error:', error);
+
 
                         const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
                         const notificationMessage = document.getElementById('notificationMessage');

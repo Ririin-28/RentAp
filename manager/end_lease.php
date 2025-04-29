@@ -45,30 +45,40 @@ try {
     ");
     $stmt->bind_param("issssss", $renteeId, $firstName, $lastName, $unit, $phoneNumber, $email, $moveOutDate);
     $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
     $stmt->close();
 
     $stmt = $conn->prepare("DELETE FROM rentee WHERE rentee_id = ?");
     $stmt->bind_param("i", $renteeId);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to delete rentee: ' . $stmt->error);
+    }
     $stmt->close();
 
     $stmt = $conn->prepare("DELETE FROM agreement_duration WHERE rentee_id = ?");
+    $stmt = $conn->prepare("DELETE FROM agreement_duration WHERE rentee_id = ?");
     $stmt->bind_param("i", $renteeId);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to delete agreement duration: ' . $stmt->error);
+    }
     $stmt->close();
 
     $stmt = $conn->prepare("UPDATE unit_status SET status = 'Available' WHERE unit = ?");
+    $stmt = $conn->prepare("UPDATE unit_status SET status = 'Available' WHERE unit = ?");
     $stmt->bind_param("s", $unit);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to update unit status: ' . $stmt->error);
+    }
     $stmt->close();
 
     $conn->commit();
 
-    echo json_encode(['success' => true, 'message' => 'Lease ended successfully and rentee archived.']);
+    echo json_encode(['success' => true, 'message' => $message . ' Lease ended successfully and rentee archived.']);
 } catch (Exception $e) {
     $conn->rollback();
     error_log($e->getMessage());
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
 } finally {
     $conn->close();
 }
