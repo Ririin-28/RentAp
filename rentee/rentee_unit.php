@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 include '../db_connection.php';
 
@@ -30,7 +34,7 @@ if ($row = $result->fetch_assoc()) {
 $stmt->close();
 
 $qrCodePicture = null;
-$qrStmt = $conn->prepare("SELECT picture FROM QR_Code ORDER BY id DESC LIMIT 1");
+$qrStmt = $conn->prepare("SELECT picture FROM qr_code ORDER BY id DESC LIMIT 1");
 $qrStmt->execute();
 $qrResult = $qrStmt->get_result();
 
@@ -40,7 +44,7 @@ if ($qrRow = $qrResult->fetch_assoc()) {
 
 $qrStmt->close();
 
-$remainingDaysStmt = $conn->prepare("SELECT remaining_days FROM Agreement_Duration WHERE rentee_id = ? AND unit = ?");
+$remainingDaysStmt = $conn->prepare("SELECT remaining_days FROM agreement_duration WHERE rentee_id = ? AND unit = ?");
 $remainingDaysStmt->bind_param("is", $rentee_id, $p_unit);
 $remainingDaysStmt->execute();
 $remainingDaysResult = $remainingDaysStmt->get_result();
@@ -58,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['maintenanceCategory']
         $description = $_POST['maintenanceDescription'];
         $requestDate = date('Y-m-d');
 
-        $maintenanceStmt = $conn->prepare("INSERT INTO Maintenance_Request (unit, rentee_id, date, category, issue, description, status) VALUES (?, ?, ?, ?, ?, ?, 'Pending')");
+        $maintenanceStmt = $conn->prepare("INSERT INTO maintenance_request (unit, rentee_id, date, category, issue, description, status) VALUES (?, ?, ?, ?, ?, ?, 'Pending')");
         $maintenanceStmt->bind_param("sissss", $p_unit, $rentee_id, $requestDate, $category, $issue, $description);
         $maintenanceStmt->execute();
         $maintenanceStmt->close();
@@ -76,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['paymentProof'])) {
     $uploadDate = date('Y-m-d');
 
     if (move_uploaded_file($_FILES['paymentProof']['tmp_name'], $targetFilePath)) {
-        $stmt = $conn->prepare("INSERT INTO Rentee_Payment (rentee_id, payment_picture, date) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO rentee_payment (rentee_id, payment_picture, date) VALUES (?, ?, ?)");
         $stmt->bind_param("iss", $rentee_id, $fileName, $uploadDate);
         $stmt->execute();
         $stmt->close();

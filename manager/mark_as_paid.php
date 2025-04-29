@@ -17,12 +17,12 @@ try {
     $dueDate = $_POST['due_date'];
     $amount = 12000.00;
 
-    $stmt = $conn->prepare("INSERT INTO Payment_History (rentee_id, date, amount, status) VALUES (?, ?, ?, 'Paid')");
+    $stmt = $conn->prepare("INSERT INTO payment_history (rentee_id, date, amount, status) VALUES (?, ?, ?, 'Paid')");
     $stmt->bind_param("isd", $renteeId, $dueDate, $amount);
     $stmt->execute();
     $stmt->close();
 
-    $stmt = $conn->prepare("DELETE FROM Pending_Payments WHERE rentee_id = ? AND due_date = ?");
+    $stmt = $conn->prepare("DELETE FROM pending_payments WHERE rentee_id = ? AND due_date = ?");
     $stmt->bind_param("is", $renteeId, $dueDate);
     $stmt->execute();
     $stmt->close();

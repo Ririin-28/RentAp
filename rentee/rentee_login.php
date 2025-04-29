@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 include '../db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -83,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="titlebarcontainer">
-        <a href="../landing_page/landing_page.php">
+        <a href="../index.php">
             <img src="../images/RentAp_full.png" alt="RentAp Logo" class="RentApLogo">
         </a>
         <h6 class="logoname mb-0">RentAp: Apartment Management System</h6>

@@ -11,7 +11,7 @@ if (!isset($_SESSION['p_first_name']) || !isset($_SESSION['p_unit'])) {
 $p_first_name = $_SESSION['p_first_name'];
 $p_unit = $_SESSION['p_unit'];
 
-$query = "SELECT * FROM Rentee WHERE first_name = ? AND (unit = ? OR unit IS NULL)";
+$query = "SELECT * FROM rentee WHERE first_name = ? AND (unit = ? OR unit IS NULL)";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("ss", $p_first_name, $p_unit);
 $stmt->execute();
@@ -78,9 +78,6 @@ $conn->close();
                                 <div id="profileDisplay">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <h4 class="card-title"><strong>Rentee ID</strong></h4>
-                                            <p class="card-text"><?= htmlspecialchars($rentee['rentee_id']) ?></p>
-
                                             <h4 class="card-title"><strong>Full Name</strong></h4>
                                             <p class="card-text">
                                                 <?= htmlspecialchars($rentee['first_name'] . ' ' . $rentee['last_name']) ?>

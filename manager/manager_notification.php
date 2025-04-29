@@ -21,8 +21,8 @@
 
         // Pending Payments
         $query = "SELECT R.rentee_id, CONCAT(R.first_name, ' ', R.last_name) AS full_name, R.email, P.due_date, P.status 
-                  FROM Rentee R 
-                  JOIN Pending_Payments P ON R.rentee_id = P.rentee_id 
+                  FROM rentee R 
+                  JOIN pending_payments P ON R.rentee_id = P.rentee_id 
                   WHERE P.status = 'Pending'";
         $result = $conn->query($query);
 
@@ -30,8 +30,8 @@
         $paymentsQuery = "
             SELECT RP.rentee_id, CONCAT(R.first_name, ' ', R.last_name) AS full_name, RP.payment_picture, RP.date AS payment_date, P.due_date
             FROM rentee_payment RP
-            JOIN Rentee R ON RP.rentee_id = R.rentee_id
-            JOIN Pending_Payments P ON RP.rentee_id = P.rentee_id
+            JOIN rentee R ON RP.rentee_id = R.rentee_id
+            JOIN pending_payments P ON RP.rentee_id = P.rentee_id
         ";
         $paymentsResult = $conn->query($paymentsQuery);
         ?>

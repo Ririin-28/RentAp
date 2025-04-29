@@ -27,19 +27,19 @@ try {
 
     $conn->begin_transaction();
 
-    $stmt = $conn->prepare("INSERT INTO Rentee (unit, first_name, last_name, facebook_profile, email, phone_number, pin) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO rentee (unit, first_name, last_name, facebook_profile, email, phone_number, pin) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssi", $unit, $firstName, $lastName, $facebookProfile, $email, $phoneNumber, $pin);
     $stmt->execute();
     $renteeId = $stmt->insert_id;
     $stmt->close();
 
-    $stmt = $conn->prepare("UPDATE Unit_Status SET status = 'Occupied' WHERE unit = ?");
+    $stmt = $conn->prepare("UPDATE unit_status SET status = 'Occupied' WHERE unit = ?");
     $stmt->bind_param("s", $unit);
     $stmt->execute();
     $stmt->close();
 
     $remainingDays = 62;
-    $stmt = $conn->prepare("INSERT INTO Agreement_Duration (unit, rentee_id, move_in_date, remaining_days) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO agreement_duration (unit, rentee_id, move_in_date, remaining_days) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("sisi", $unit, $renteeId, $moveInDate, $remainingDays);
     $stmt->execute();
     $stmt->close();

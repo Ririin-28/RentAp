@@ -62,8 +62,8 @@ if (!isset($_SESSION['m_name'])) {
                                                 $query = "SELECT mr.request_id, mr.unit, CONCAT(r.first_name, ' ', r.last_name) AS rentee_name,
                                                                  DATE_FORMAT(mr.date, '%b %e') AS formatted_date,
                                                                  mr.category, mr.issue, mr.description, mr.status
-                                                          FROM Maintenance_Request mr
-                                                          JOIN Rentee r ON mr.rentee_id = r.rentee_id";
+                                                          FROM maintenance_request mr
+                                                          JOIN rentee r ON mr.rentee_id = r.rentee_id";
                                                 $result = $conn->query($query);
 
                                                 if ($result->num_rows > 0) {

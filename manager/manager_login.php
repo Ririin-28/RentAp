@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="titlebarcontainer">
-        <a href="../landing_page/landing_page.php">
+        <a href="../index.php">
             <img src="../images/RentAp_full.png" alt="RentAp Logo" class="RentApLogo">
         </a>
         <h6 class="logoname mb-0">RentAp: Apartment Management System</h6>

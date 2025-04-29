@@ -20,6 +20,7 @@ if (!isset($_SESSION['m_name'])) {
     <link rel="icon" href="../images/RentAp_logo.png" type="image/x-icon">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../main.css">
 
@@ -123,13 +124,11 @@ if (!isset($_SESSION['m_name'])) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $conn = new mysqli("localhost", "root", "", "RentAp");
-
                                     if ($conn->connect_error) {
                                         die("Connection failed: " . $conn->connect_error);
                                     }
 
-                                    $sql = "SELECT rentee_id, CONCAT(first_name, ' ', last_name) AS full_name, unit, contact_number, email, move_out_date FROM Rentee_Archive";
+                                    $sql = "SELECT rentee_id, CONCAT(first_name, ' ', last_name) AS full_name, unit, contact_number, email, move_out_date FROM rentee_archive";
                                     $result = $conn->query($sql);
 
                                     if ($result->num_rows > 0) {

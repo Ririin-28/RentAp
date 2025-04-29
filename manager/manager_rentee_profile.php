@@ -7,7 +7,7 @@ if (!isset($_SESSION['m_name'])) {
     exit();
 }
 
-$query = "SELECT rentee_id, unit, CONCAT(first_name, ' ', last_name) AS full_name, phone_number, email FROM Rentee";
+$query = "SELECT rentee_id, unit, CONCAT(first_name, ' ', last_name) AS full_name, phone_number, email FROM rentee";
 $result = $conn->query($query);
 ?>
 

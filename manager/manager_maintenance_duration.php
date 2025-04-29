@@ -31,7 +31,6 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title mb-4"><strong>Maintenance Duration</strong></h4>
-                                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addRenteeModal">Add Rentee</button>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -48,8 +47,8 @@
                                             include '../db_connection.php';
 
                                             $query = "SELECT ad.rentee_id, CONCAT(r.first_name, ' ', r.last_name) AS full_name, ad.unit, ad.move_in_date, ad.remaining_days
-                                                      FROM Agreement_Duration ad
-                                                      JOIN Rentee r ON ad.rentee_id = r.rentee_id";
+                                                      FROM agreement_duration ad
+                                                      JOIN rentee r ON ad.rentee_id = r.rentee_id";
                                             $result = $conn->query($query);
 
                                             if ($result->num_rows > 0) {

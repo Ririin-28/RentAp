@@ -8,47 +8,51 @@ if (!isset($_SESSION['m_name'])) {
 }
 
 // Count of Occupied Rooms
-$occupiedRoomsQuery = "SELECT COUNT(*) AS occupied_count FROM Unit_Status WHERE status = 'Occupied'";
+$occupiedRoomsQuery = "SELECT COUNT(*) AS occupied_count FROM unit_status WHERE status = 'Occupied'";
 $occupiedRoomsResult = $conn->query($occupiedRoomsQuery);
 $occupiedRooms = $occupiedRoomsResult->fetch_assoc()['occupied_count'];
 
 // Count of Available Rooms
-$availableRoomsQuery = "SELECT COUNT(*) AS available_count FROM Unit_Status WHERE status = 'Available'";
+$availableRoomsQuery = "SELECT COUNT(*) AS available_count FROM unit_status WHERE status = 'Available'";
 $availableRoomsResult = $conn->query($availableRoomsQuery);
 $availableRooms = $availableRoomsResult->fetch_assoc()['available_count'];
 
 // Count of Maintenance Requests
-$maintenanceRequestsQuery = "SELECT COUNT(*) AS maintenance_count FROM Maintenance_Request WHERE status = 'Pending'";
+$maintenanceRequestsQuery = "SELECT COUNT(*) AS maintenance_count FROM maintenance_request WHERE status = 'Pending'";
 $maintenanceRequestsResult = $conn->query($maintenanceRequestsQuery);
 $maintenanceRequests = $maintenanceRequestsResult->fetch_assoc()['maintenance_count'];
 
 // Count of Overdue Payments
-$overduePaymentsQuery = "SELECT COUNT(*) AS overdue_count FROM Payment_History WHERE status = 'Overdue'";
+$overduePaymentsQuery = "SELECT COUNT(*) AS overdue_count FROM payment_history WHERE status = 'Overdue'";
 $overduePaymentsResult = $conn->query($overduePaymentsQuery);
 $overduePayments = $overduePaymentsResult->fetch_assoc()['overdue_count'];
 
-// Upcoming Due Dates
+// Upcoming Due Dates with Rentee Name
 $upcomingDueDatesQuery = "
-    SELECT rentee_id, due_date, DATEDIFF(due_date, CURDATE()) AS days_left
-    FROM Pending_Payments
-    WHERE status = 'Pending' AND due_date >= CURDATE()
-    ORDER BY due_date ASC
+    SELECT pp.rentee_id, CONCAT(r.first_name, ' ', r.last_name) AS rentee_name, 
+           pp.due_date, DATEDIFF(pp.due_date, CURDATE()) AS days_left
+    FROM pending_payments pp
+    JOIN rentee r ON pp.rentee_id = r.rentee_id
+    WHERE pp.status = 'Pending' AND pp.due_date >= CURDATE()
+    ORDER BY pp.due_date ASC
 ";
 $upcomingDueDatesResult = $conn->query($upcomingDueDatesQuery);
 
-// Overdue Dates
+// Overdue Dates with Rentee Name
 $overdueDatesQuery = "
-    SELECT rentee_id, due_date, DATEDIFF(CURDATE(), due_date) AS days_elapsed
-    FROM Pending_Payments
-    WHERE status = 'Pending' AND due_date < CURDATE()
-    ORDER BY due_date ASC
+    SELECT pp.rentee_id, CONCAT(r.first_name, ' ', r.last_name) AS rentee_name, 
+           pp.due_date, DATEDIFF(CURDATE(), pp.due_date) AS days_elapsed
+    FROM pending_payments pp
+    JOIN rentee r ON pp.rentee_id = r.rentee_id
+    WHERE pp.status = 'Pending' AND pp.due_date < CURDATE()
+    ORDER BY pp.due_date ASC
 ";
 $overdueDatesResult = $conn->query($overdueDatesQuery);
 
 // Peak Rental Periods (Move-in Dates by Month)
 $peakRentalQuery = "
     SELECT MONTH(move_in_date) AS month, COUNT(*) AS count
-    FROM Agreement_Duration
+    FROM agreement_duration
     WHERE move_in_date IS NOT NULL
     GROUP BY MONTH(move_in_date)
     ORDER BY MONTH(move_in_date)
@@ -63,7 +67,7 @@ while ($row = $peakRentalResult->fetch_assoc()) {
 // Monthly Revenue Based on Payment_History
 $monthlyRevenueQuery = "
     SELECT MONTH(date) AS month, SUM(amount) AS total_revenue
-    FROM Payment_History
+    FROM payment_history
     WHERE status = 'Paid' AND YEAR(date) = YEAR(CURDATE())
     GROUP BY MONTH(date)
     ORDER BY MONTH(date)
@@ -78,7 +82,7 @@ while ($row = $monthlyRevenueResult->fetch_assoc()) {
 // Yearly Revenue Based on Payment_History
 $yearlyRevenueQuery = "
     SELECT YEAR(date) AS year, SUM(amount) AS total_revenue
-    FROM Payment_History
+    FROM payment_history
     WHERE status = 'Paid'
     GROUP BY YEAR(date)
     ORDER BY YEAR(date)
@@ -94,9 +98,9 @@ while ($row = $yearlyRevenueResult->fetch_assoc()) {
 $paymentStatusQuery = "
     SELECT status, COUNT(*) AS count
     FROM (
-        SELECT status FROM Payment_History
+        SELECT status FROM payment_history
         UNION ALL
-        SELECT status FROM Pending_Payments
+        SELECT status FROM pending_payments
     ) AS combined_status
     GROUP BY status
 ";
@@ -130,6 +134,23 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
     .cardBox {
         background-color: transparent !important;
         border-bottom: none !important;
+    }
+    
+    .overdue-row {
+        background-color: #ffdddd !important; /* Light red background */
+    }
+    
+    .paid-row {
+        background-color: #ddddff !important; /* Light blue background */
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
     }
 </style>
 
@@ -203,24 +224,28 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
                                     <div class="col-md-6">
                                         <div class="card-body">
                                             <h5 class="card-title mb-4"><strong>Upcoming Due Dates</strong></h5>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Rentee ID</th>
-                                                        <th>Due Date</th>
-                                                        <th>Days Left</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php while ($row = $upcomingDueDatesResult->fetch_assoc()): ?>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
                                                         <tr>
-                                                            <td><?= htmlspecialchars($row['rentee_id']) ?></td>
-                                                            <td><?= htmlspecialchars($row['due_date']) ?></td>
-                                                            <td><?= htmlspecialchars($row['days_left']) ?> days</td>
+                                                            <th>Rentee Name</th>
+                                                            <th>Due Date</th>
+                                                            <th>Days Left</th>
                                                         </tr>
-                                                    <?php endwhile; ?>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php while ($row = $upcomingDueDatesResult->fetch_assoc()): 
+                                                            $dueDate = new DateTime($row['due_date']);
+                                                        ?>
+                                                            <tr>
+                                                                <td><?= htmlspecialchars($row['rentee_name']) ?></td>
+                                                                <td><?= htmlspecialchars($dueDate->format('F j, Y')) ?></td>
+                                                                <td><?= htmlspecialchars($row['days_left']) ?> days</td>
+                                                            </tr>
+                                                        <?php endwhile; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -228,24 +253,28 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
                                     <div class="col-md-6">
                                         <div class="card-body">
                                             <h5 class="card-title mb-4"><strong>Overdue Dates</strong></h5>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Rentee ID</th>
-                                                        <th>Due Date</th>
-                                                        <th>Days Elapsed</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php while ($row = $overdueDatesResult->fetch_assoc()): ?>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover">
+                                                    <thead>
                                                         <tr>
-                                                            <td><?= htmlspecialchars($row['rentee_id']) ?></td>
-                                                            <td><?= htmlspecialchars($row['due_date']) ?></td>
-                                                            <td><?= htmlspecialchars($row['days_elapsed']) ?> days</td>
+                                                            <th>Rentee Name</th>
+                                                            <th>Due Date</th>
+                                                            <th>Days Overdue</th>
                                                         </tr>
-                                                    <?php endwhile; ?>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php while ($row = $overdueDatesResult->fetch_assoc()): 
+                                                            $dueDate = new DateTime($row['due_date']);
+                                                        ?>
+                                                            <tr class="overdue-row">
+                                                                <td><?= htmlspecialchars($row['rentee_name']) ?></td>
+                                                                <td><?= htmlspecialchars($dueDate->format('F j, Y')) ?></td>
+                                                                <td><?= htmlspecialchars($row['days_elapsed']) ?> days</td>
+                                                            </tr>
+                                                        <?php endwhile; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -379,10 +408,12 @@ while ($row = $paymentStatusResult->fetch_assoc()) {
                     }
                 });
 
+                // Payment Status Breakdown Chart with colors
                 var paymentStatusOptions = {
                     chart: { type: 'pie', height: 300 },
                     series: [<?= $paymentStatusData['Paid'] ?>, <?= $paymentStatusData['Overdue'] ?>, <?= $paymentStatusData['Pending'] ?>],
                     labels: ['Paid', 'Overdue', 'Pending'],
+                    colors: ['#3366cc', '#dc3545', '#ffc107'], // Blue for Paid, Red for Overdue, Yellow for Pending
                     title: { text: 'Payment Status Breakdown', align: 'center' }
                 };
                 new ApexCharts(document.querySelector("#paymentStatusChart"), paymentStatusOptions).render();

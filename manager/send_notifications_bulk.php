@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $mail->send();
 
-            $update_query = "UPDATE Pending_Payments SET status = 'Pending' WHERE rentee_id = ?";
+            $update_query = "UPDATE pending_payments SET status = 'Pending' WHERE rentee_id = ?";
             $stmt = $conn->prepare($update_query);
             $stmt->bind_param("i", $rentee_id);
             $stmt->execute();
